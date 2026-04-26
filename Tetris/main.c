@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "tablero.h"
 #include "GBT/gbt.h"
 /*
     Apellido: Nuñez, Juan Ignacio
@@ -17,8 +18,8 @@
     Usuario: TomiiHB
     Entrega: Sí
 */
-int main()
-{
-    printf("Hola\n");
+int main() {
+
+    inicializar_tablero();
     return 0;
 }
