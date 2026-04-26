@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "GBT/gbt.h"
 /*
     Apellido: Nuñez, Juan Ignacio
     DNI: 44547280
@@ -18,6 +19,6 @@
 */
 int main()
 {
-    printf("Hello world!\n");
+    printf("Hola\n");
     return 0;
 }
