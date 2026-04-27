@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "tablero.h"
 #include "GBT/gbt.h"
+#include "juego.h"
+#include "deteccion_tecla.h"
+#include "render.h"
 /*
     Apellido: Nuñez, Juan Ignacio
     DNI: 44547280
@@ -20,6 +23,17 @@
 */
 int main() {
 
-    inicializar_tablero();
+    gbt_iniciar();
+    gbt_crear_ventana("Tetris", 320, 480, 1);
+
+    juego_iniciar();
+
+    while (1) {
+        input_actualizar();
+        juego_actualizar();
+        render_dibujar();
+        gbt_esperar(100);
+    }
+    gbt_cerrar();
     return 0;
 }

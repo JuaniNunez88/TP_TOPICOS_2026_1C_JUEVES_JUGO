@@ -1,4 +1,4 @@
-// DECLARACION DE PIEZAS
+/*/ DECLARACION DE PIEZAS
 
 typedef struct
 {
@@ -56,3 +56,4 @@ t_pieza piezaZ[4][4] = { // La Z
     {0,0,0,0},
     {0,0,0,0}
     }, 10,0;
+*/
