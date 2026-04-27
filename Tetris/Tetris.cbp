@@ -31,9 +31,21 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="deteccion_tecla.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="deteccion_tecla.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="piezas.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="piezas.h" />
+		<Unit filename="tablero.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tablero.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
