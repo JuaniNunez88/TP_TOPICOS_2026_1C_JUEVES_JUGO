@@ -13,7 +13,12 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="GBT_v2026.1C.01/include" />
 				</Compiler>
+				<Linker>
+					<Add option="-lgbt" />
+					<Add directory="GBT_v2026.1C.01/lib" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/Tetris" prefix_auto="1" extension_auto="1" />
@@ -35,6 +40,16 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="deteccion_tecla.h" />
+		<Unit filename="dibuja.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="dibuja.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="logica.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="logica.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
