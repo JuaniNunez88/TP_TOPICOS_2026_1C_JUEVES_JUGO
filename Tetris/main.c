@@ -5,6 +5,7 @@
 #include "logica.h"
 #include "deteccion_tecla.h"
 #include "dibuja.h"
+#include <time.h>
 /*
     Apellido: Nuñez, Juan Ignacio
     DNI: 44547280
@@ -26,16 +27,18 @@ int main()
 
     gbt_iniciar();
     gbt_crear_ventana("Tetris", 320, 480, 1);
-
+    srand(time(0)); // AGREGADO 01.54
     juego_iniciar();
 
-    while (1)
+    int val = 1; // Si se presiona ESC, cierra ventana
+    while (val)
     {
         gbt_procesar_entrada();//Lee el teclado del sistema
         input_actualizar(); //Guarda el estado de teclas en variables propias
-        juego_actualizar(); //mueve la pieza, detecta colisiones
+        juego_actualizar(&val); //mueve la pieza, detecta colisiones
         render_dibujar(); //dibuja TODO en pantalla
         gbt_esperar(16); //controla la velocidad (~60 FPS)
+
     }
     gbt_cerrar();
     return 0;

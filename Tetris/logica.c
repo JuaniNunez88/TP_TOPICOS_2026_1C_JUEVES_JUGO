@@ -1,6 +1,7 @@
 #include "logica.h"
 #include "tablero.h"
 #include "deteccion_tecla.h"
+#include "GBT/gbt.h"
 
 int pieza_x;
 int pieza_y;
@@ -14,7 +15,7 @@ void juego_iniciar()
     timer_caida = 0;
 }
 
-void juego_actualizar()
+void juego_actualizar(int *val)
 {
     // MOVIMIENTO HORIZONTAL
     int nueva_x = pieza_x;
@@ -48,6 +49,7 @@ void juego_actualizar()
             pieza_y = nueva_y;
         }
     }
+
     timer_caida++;
 
     if (timer_caida > 30)
@@ -71,5 +73,13 @@ void juego_actualizar()
         }
 
         timer_caida = 0;
+    }
+    eGBT_Tecla t = gbt_obtener_tecla_presionada();
+    if( t == GBTK_ESCAPE){
+        *val = 0;
+    }
+    if( t == GBTK_ARRIBA)
+    {
+
     }
 }
