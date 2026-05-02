@@ -36,6 +36,7 @@ int main()
         juego_actualizar(); //mueve la pieza, detecta colisiones
         render_dibujar(); //dibuja TODO en pantalla
         gbt_esperar(16); //controla la velocidad (~60 FPS)
+        printf("%d\n", puntaje);
     }
     gbt_cerrar();
     return 0;

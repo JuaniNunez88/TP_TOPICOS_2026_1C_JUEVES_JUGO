@@ -6,6 +6,8 @@ int pieza_x;
 int pieza_y;
 
 int timer_caida = 0;
+int puntaje = 0;
+int juego_terminado = 0; //usar bool despues, para optimizacion?
 
 void juego_iniciar()
 {
@@ -18,6 +20,9 @@ void juego_actualizar()
 {
     // MOVIMIENTO HORIZONTAL
     int nueva_x = pieza_x;
+    //perdió el juego
+    if(juego_terminado)
+        return;
 
     if (input_derecha()) nueva_x++;
     if (input_izquierda()) nueva_x--;
@@ -39,13 +44,28 @@ void juego_actualizar()
 
             tablero_set(pieza_y, pieza_x, 1);
 
+            //
+
+            int lineas = tablero_limpiar_lineas_completas();
+            if(lineas > 0)
+            {
+                puntaje += (lineas * 100) + ((lineas -1) * 50);
+            }
+
             pieza_x = 4;
             pieza_y = 0;
+
+            if(tablero_get(pieza_y, pieza_x))
+            {
+                juego_terminado = 1;
+            }
 
         }
         else
         {
             pieza_y = nueva_y;
+            puntaje +=1;
+
         }
     }
     timer_caida++;
@@ -60,9 +80,23 @@ void juego_actualizar()
 
         //Fija la pieza:guarda el bloque en el tablero
             tablero_set(pieza_y, pieza_x, 1);
+
+
+            int lineas = tablero_limpiar_lineas_completas();
+            if(lineas > 0)
+            {
+                puntaje += (lineas * 100) + ((lineas -1) * 50);
+            }
+
+
             //Aparece nueva pieza arriba
             pieza_x = 4;
             pieza_y = 0;
+
+            if(tablero_get(pieza_y, pieza_x))
+            {
+                juego_terminado = 1;
+            }
 
         }
         else
