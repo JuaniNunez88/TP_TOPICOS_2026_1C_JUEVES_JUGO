@@ -8,6 +8,10 @@ void fijar_pieza();
 int choque_vert(int futura_y); // En desarrollo
 int choque_horiz(int futura_x); // En desarrollo
 
+extern int pieza_x;
+extern int pieza_y;
+extern int puntaje;
+extern int juego_terminado;
 typedef struct {
     int x;
     int y;

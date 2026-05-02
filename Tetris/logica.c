@@ -76,6 +76,9 @@ int choque_horiz(int futura_x)
 
 
 
+int timer_caida = 0;
+int puntaje = 0;
+int juego_terminado = 0; //usar bool despues, para optimizacion?
 // timer para la caída automática
 static int timer_caida = 0;
 
@@ -98,6 +101,11 @@ void juego_actualizar(int *val)
 
 t_pieza juego_get_pieza()
 {
+    // MOVIMIENTO HORIZONTAL
+    int nueva_x = pieza_x;
+    //perdi� el juego
+    if(juego_terminado)
+        return;
     return pieza;
 }
 
@@ -147,6 +155,14 @@ void juego_actualizar()
             pieza.x = nueva_x;
         }
 
+            //
+
+            int lineas = tablero_limpiar_lineas_completas();
+            if(lineas > 0)
+            {
+                puntaje += (lineas * 100) + ((lineas -1) * 50);
+            }
+
             //tablero_set(pieza_y, pieza_x, 1); // guarda un solo bloque en esta coordenada
             fijar_pieza();
             pieza_x = 4;
@@ -157,6 +173,11 @@ void juego_actualizar()
         if (input_abajo())
         {
             int nueva_y = pieza.y + 1;
+
+            if(tablero_get(pieza_y, pieza_x))
+            {
+                juego_terminado = 1;
+            }
 
             if (nueva_y >= FILAS || tablero_get(nueva_y, pieza.x))
             {
@@ -185,6 +206,9 @@ void juego_actualizar()
 
         if (timer_caida > 30)
         {
+            pieza_y = nueva_y;
+            puntaje +=1;
+
             int nueva_y = pieza.y + 1;
 
             if (nueva_y >= FILAS || tablero_get(nueva_y, pieza.x))
@@ -238,6 +262,16 @@ void juego_actualizar()
         }
 
         //Fija la pieza:guarda el bloque en el tablero
+            tablero_set(pieza_y, pieza_x, 1);
+
+
+            int lineas = tablero_limpiar_lineas_completas();
+            if(lineas > 0)
+            {
+                puntaje += (lineas * 100) + ((lineas -1) * 50);
+            }
+
+
             //tablero_set(pieza_y, pieza_x, 1);
             fijar_pieza();
             //Aparece nueva pieza arriba
@@ -245,6 +279,13 @@ void juego_actualizar()
             pieza_y = 0;
         break;
 
+            if(tablero_get(pieza_y, pieza_x))
+            {
+                juego_terminado = 1;
+            }
+
+        }
+        else
     case ESTADO_GAMEOVER:
 
         if (input_enter())

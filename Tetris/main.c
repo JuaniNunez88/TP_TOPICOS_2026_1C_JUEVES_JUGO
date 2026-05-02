@@ -8,20 +8,20 @@
 #include <time.h>
 // Falta funcion random
 /*
-    Apellido: Nuñez, Juan Ignacio
+    Apellido: NuÃ±ez, Juan Ignacio
     DNI: 44547280
     Usuario: JuaniNunez88
-    Entrega: Sí
+    Entrega: SÃ­
 
     Apellido: Delia, Lautaro Tomas
     DNI: 43722468
     Usuario: Iautaro
-    Entrega: Sí
+    Entrega: SÃ­
 
     Apellido: Borja, Tomas Hernan
     DNI: 42353302
     Usuario: TomiiHB
-    Entrega: Sí
+    Entrega: SÃ­
 */
 int main()
 {
@@ -39,6 +39,7 @@ int main()
         juego_actualizar(&val); //mueve la pieza, detecta colisiones
         render_dibujar(); //dibuja TODO en pantalla
         gbt_esperar(16); //controla la velocidad (~60 FPS)
+        printf("%d\n", puntaje);
 
     }
     gbt_cerrar();
