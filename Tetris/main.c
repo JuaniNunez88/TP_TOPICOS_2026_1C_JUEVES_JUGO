@@ -6,6 +6,7 @@
 #include "deteccion_tecla.h"
 #include "dibuja.h"
 #include <time.h>
+// Falta funcion random
 /*
     Apellido: Nuñez, Juan Ignacio
     DNI: 44547280
