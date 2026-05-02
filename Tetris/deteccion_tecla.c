@@ -4,12 +4,12 @@
 static int izq, der, abajo,arriba;
 
 void input_actualizar() {
-    //arriba = tecla presionada, no sostenida
-    //agregados: la p puede ser pausa
+
+
     izq = gbt_tecla_sostenida(GBTK_IZQUIERDA);
     der = gbt_tecla_sostenida(GBTK_DERECHA);
     abajo = gbt_tecla_sostenida(GBTK_ABAJO);
-    arriba = gbt_tecla_presionada(GBTK_ARRIBA);
+    arriba = gbt_tecla_presionada(GBTK_ARRIBA); // Para rotar la pieza hacia la derecha
 }
 
 int input_izquierda() { return izq; }

@@ -8,9 +8,12 @@ typedef struct
 }t_pieza;
 
 //void seleccionPieza(t_pieza *tp ,int val);
-//extern t_pieza piezaJ; // AGREGADO
+//extern t_pieza piezaJ;
 //extern t_pieza piezaO;
 t_pieza* obtener_matriz_pieza();
 void rotarPieza(t_pieza *pieza_rotar);
+
+
+
 
 #endif // PIEZAS_H_INCLUDED*/

@@ -27,7 +27,7 @@ int main()
 
     gbt_iniciar();
     gbt_crear_ventana("Tetris", 320, 480, 1);
-    srand(time(0)); // AGREGADO 01.54
+    srand(time(0)); // Para la funcion de generar piezas aleatorias
     juego_iniciar();
 
     int val = 1; // Si se presiona ESC, cierra ventana

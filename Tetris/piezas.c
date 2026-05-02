@@ -1,14 +1,7 @@
 #include "piezas.h"
 #include <stdlib.h>
+#include "logica.h"
 // DECLARACION DE PIEZAS
-/*
-typedef struct
-{
-    int tamano[4][4];
-    int c; // color
-}t_pieza; */
-
-
 
 static t_pieza piezaI = { // La I
     {
@@ -16,6 +9,7 @@ static t_pieza piezaI = { // La I
     {0,0,0,0},
     {0,0,0,0},
     {0,0,0,0} }, 11};
+
 
 static t_pieza piezaJ = { // La J
             {
@@ -61,6 +55,7 @@ static t_pieza piezaZ = { // La Z
 
 t_pieza* obtener_matriz_pieza()
 {
+    // Aca falta agregar funcion que devuelva piezas random
     /*
     int numero_pieza = rand()%7 +1; // Elementos de 1 a 7
     printf("Numero pieza:%d\n", numero_pieza);
@@ -74,29 +69,29 @@ t_pieza* obtener_matriz_pieza()
         case 6: return &piezaT;
         case 7: return &piezaT;
     }*/
-    return &piezaI;
+    return &piezaL;
 }
 
 void rotarPieza(t_pieza *pieza_rotar)
 {
     int temp;
-    int n=4;
-    for(int i= 0; i < n; i++)
+    //int n=4;
+    for(int i= 0; i < TMAT; i++)
     {
-        for(int j=i; j<n; j++)
+        for(int j=i; j<TMAT; j++)
         {
             temp = pieza_rotar->tamano[i][j];
             pieza_rotar->tamano[i][j] = pieza_rotar->tamano[j][i]; // Transpongo la matriz(filas a columans)
             pieza_rotar->tamano[j][i] = temp;
         }
     }
-    for( int i=0; i<n; i++)
+    for( int i=0; i<TMAT; i++)
     {
-        for(int j=0; j<n/2;j++)
+        for(int j=0; j<TMAT/2;j++)
         {
             temp = pieza_rotar->tamano[i][j];
-            pieza_rotar->tamano[i][j] = pieza_rotar->tamano[i][n-1-j]; // invierto la matriz. Toda la fila da vuelta horizontal
-            pieza_rotar->tamano[i][n-1-j] = temp;
+            pieza_rotar->tamano[i][j] = pieza_rotar->tamano[i][TMAT-1-j]; // invierto la matriz. Toda la fila da vuelta horizontal
+            pieza_rotar->tamano[i][TMAT-1-j] = temp;
         }
     }
 
