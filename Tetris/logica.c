@@ -1,75 +1,168 @@
 #include "logica.h"
-#include "tablero.h"
 #include "deteccion_tecla.h"
+#include "tablero.h"
 
-int pieza_x;
-int pieza_y;
+#define COLUMNAS 10
+#define FILAS 20
 
-int timer_caida = 0;
+// pieza actual
+static t_pieza pieza;
+static e_estado estado;
 
+// timer para la caída automática
+static int timer_caida = 0;
+
+// ------------------------
+// INICIALIZAR JUEGO
+// ------------------------
 void juego_iniciar()
 {
-    pieza_x = 4;
-    pieza_y = 0;
+    estado = ESTADO_MENU;
+
+    pieza.x = 4;
+    pieza.y = 0;
+
     timer_caida = 0;
+
+    inicializar_tablero();
 }
 
+
+t_pieza juego_get_pieza()
+{
+    return pieza;
+}
+
+e_estado juego_get_estado()
+{
+    return estado;
+}
+
+// ------------------------
+// ACTUALIZAR JUEGO
+// ------------------------
 void juego_actualizar()
 {
-    // MOVIMIENTO HORIZONTAL
-    int nueva_x = pieza_x;
-
-    if (input_derecha()) nueva_x++;
-    if (input_izquierda()) nueva_x--;
-
-    // validar horizontal (Evita que salga del tablero y atravesar bloques)
-    if (nueva_x >= 0 && nueva_x < COLUMNAS &&
-            !tablero_get(pieza_y, nueva_x))
+    switch (estado)
     {
-        pieza_x = nueva_x;
+    case ESTADO_MENU:
+
+        if (input_enter())
+        {
+            estado = ESTADO_JUGANDO;
+            inicializar_tablero();
+
+            pieza.x = 4;
+            pieza.y = 0;
+        }
+
+        break;
+
+    case ESTADO_JUGANDO:
+    {
+        // ------------------------
+        // MOVIMIENTO HORIZONTAL
+        // ------------------------
+        int nueva_x = pieza.x;
+
+        if (input_derecha()) nueva_x++;
+        if (input_izquierda()) nueva_x--;
+
+        if (nueva_x >= 0 && nueva_x < COLUMNAS &&
+                !tablero_get(pieza.y, nueva_x))
+        {
+            pieza.x = nueva_x;
+        }
+
+        // ------------------------
+        // BAJADA MANUAL
+        // ------------------------
+        if (input_abajo())
+        {
+            int nueva_y = pieza.y + 1;
+
+            if (nueva_y >= FILAS || tablero_get(nueva_y, pieza.x))
+            {
+                tablero_set(pieza.y, pieza.x, 1);
+
+                // nueva pieza
+                pieza.x = 4;
+                pieza.y = 0;
+
+                // GAME OVER
+                if (tablero_get(pieza.y, pieza.x))
+                {
+                    estado = ESTADO_GAMEOVER;
+                }
+            }
+            else
+            {
+                pieza.y = nueva_y;
+            }
+        }
+
+        // ------------------------
+        // CAÍDA AUTOMÁTICA
+        // ------------------------
+        timer_caida++;
+
+        if (timer_caida > 30)
+        {
+            int nueva_y = pieza.y + 1;
+
+            if (nueva_y >= FILAS || tablero_get(nueva_y, pieza.x))
+            {
+                tablero_set(pieza.y, pieza.x, 1);
+
+                // nueva pieza
+                pieza.x = 4;
+                pieza.y = 0;
+
+                // GAME OVER
+                // verificar toda la fila superior
+                for (int j = 0; j < COLUMNAS; j++)
+                {
+                    if (tablero_get(0, j))
+                    {
+                        estado = ESTADO_GAMEOVER;
+                    }
+                }
+            }
+            else
+            {
+                pieza.y = nueva_y;
+            }
+
+            timer_caida = 0;
+        }
+
+        // ------------------------
+        // PAUSA
+        // ------------------------
+        if (input_pausa())
+        {
+            estado = ESTADO_PAUSA;
+        }
+
     }
+    break;
 
-    // Baja la pieza con la flecha hacia abajo no por gravedad
-    if (input_abajo())
-    {
-        int nueva_y = pieza_y + 1;
+    case ESTADO_PAUSA:
 
-        if (nueva_y >= FILAS || tablero_get(nueva_y, pieza_x))
+        if (input_pausa())
         {
-
-            tablero_set(pieza_y, pieza_x, 1);
-
-            pieza_x = 4;
-            pieza_y = 0;
-
-        }
-        else
-        {
-            pieza_y = nueva_y;
-        }
-    }
-    timer_caida++;
-
-    if (timer_caida > 30)
-    {
-
-        int nueva_y = pieza_y + 1;
-    //COLISION VERTICAL
-        if (nueva_y >= FILAS || tablero_get(nueva_y, pieza_x))
-        {
-
-        //Fija la pieza:guarda el bloque en el tablero
-            tablero_set(pieza_y, pieza_x, 1);
-            //Aparece nueva pieza arriba
-            pieza_x = 4;
-            pieza_y = 0;
-
-        }
-        else
-        {
-            pieza_y = nueva_y;
+            estado = ESTADO_JUGANDO;
         }
 
-        timer_caida = 0;
+        break;
+
+    case ESTADO_GAMEOVER:
+
+        if (input_enter())
+        {
+            estado = ESTADO_MENU;
+        }
+
+        break;
     }
 }
