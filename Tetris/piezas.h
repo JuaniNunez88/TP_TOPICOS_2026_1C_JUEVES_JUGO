@@ -1,19 +1,15 @@
 #ifndef PIEZAS_H_INCLUDED
 #define PIEZAS_H_INCLUDED
 
+#define TMAT 4
+
 typedef struct
 {
-    int tamano[4][4];
+    int tamano[TMAT][TMAT];
     int c; // color
-}t_pieza;
+} t_piezaL;
 
-//void seleccionPieza(t_pieza *tp ,int val);
-//extern t_pieza piezaJ;
-//extern t_pieza piezaO;
-t_pieza* obtener_matriz_pieza();
-void rotarPieza(t_pieza *pieza_rotar);
+t_piezaL* elegir_pieza_aleatoria();
+void rotarPieza(t_piezaL *pieza_rotar);
 
-
-
-
-#endif // PIEZAS_H_INCLUDED*/
+#endif // PIEZAS_H_INCLUDED

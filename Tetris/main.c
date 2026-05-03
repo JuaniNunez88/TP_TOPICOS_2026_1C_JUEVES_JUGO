@@ -1,47 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "tablero.h"
+#include <time.h>
+
 #include "GBT/gbt.h"
 #include "logica.h"
 #include "deteccion_tecla.h"
 #include "dibuja.h"
-#include <time.h>
-// Falta funcion random
+
 /*
-    Apellido: Nuñez, Juan Ignacio
-    DNI: 44547280
-    Usuario: JuaniNunez88
-    Entrega: Sí
-
-    Apellido: Delia, Lautaro Tomas
-    DNI: 43722468
-    Usuario: Iautaro
-    Entrega: Sí
-
-    Apellido: Borja, Tomas Hernan
-    DNI: 42353302
-    Usuario: TomiiHB
-    Entrega: Sí
+    Apellido: Nuñez, Juan Ignacio     DNI: 44547280   Usuario: JuaniNunez88
+    Apellido: Delia, Lautaro Tomas    DNI: 43722468   Usuario: Iautaro
+    Apellido: Borja, Tomas Hernan     DNI: 42353302   Usuario: TomiiHB
 */
+
 int main()
 {
-
     gbt_iniciar();
     gbt_crear_ventana("Tetris", 320, 480, 1);
-    srand(time(0)); // Para la funcion de generar piezas aleatorias
-    juego_iniciar();
+    srand((unsigned int)time(NULL));
 
-    int val = 1; // Si se presiona ESC, cierra ventana
+    t_estado_juego eg;
+    juego_iniciar(&eg);
+
+    int val = 1;
     while (val)
     {
-        gbt_procesar_entrada();//Lee el teclado del sistema
-        input_actualizar(); //Guarda el estado de teclas en variables propias
-        juego_actualizar(&val); //mueve la pieza, detecta colisiones
-        render_dibujar(); //dibuja TODO en pantalla
-        gbt_esperar(16); //controla la velocidad (~60 FPS)
-        printf("%d\n", puntaje);
+        gbt_procesar_entrada();
+        input_actualizar();
+        juego_actualizar(&eg, &val);
+        render_dibujar(&eg);
+        gbt_esperar(16);
 
+        printf("Puntaje: %d\n", eg.puntaje);
     }
+
     gbt_cerrar();
     return 0;
 }
