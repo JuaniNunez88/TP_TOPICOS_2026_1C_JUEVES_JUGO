@@ -9,4 +9,6 @@ int  input_arriba();
 int  input_enter();
 int  input_pausa();
 
+int input_salir();
+
 #endif // DETECCION_TECLA_H_INCLUDED

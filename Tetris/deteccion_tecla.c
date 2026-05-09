@@ -1,7 +1,7 @@
 #include "deteccion_tecla.h"
 #include "GBT/gbt.h"
 
-static int izq, der, abajo, enter, pausa, arriba;
+static int izq, der, abajo, enter, pausa, arriba, salir;
 
 void input_actualizar()
 {
@@ -11,6 +11,7 @@ void input_actualizar()
     der    = gbt_tecla_sostenida(GBTK_DERECHA);
     abajo  = gbt_tecla_sostenida(GBTK_ABAJO);
     arriba = gbt_tecla_presionada(GBTK_ARRIBA);
+    salir = gbt_tecla_presionada(GBTK_ESCAPE);
 }
 
 int input_izquierda() { return izq;    }
@@ -19,3 +20,6 @@ int input_abajo()     { return abajo;  }
 int input_arriba()    { return arriba; }
 int input_enter()     { return enter;  }
 int input_pausa()     { return pausa;  }
+
+int input_salir()     { return salir;  }
+

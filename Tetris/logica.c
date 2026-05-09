@@ -71,12 +71,11 @@ void juego_iniciar(t_estado_juego *eg)
 void juego_actualizar(t_estado_juego *eg, int *val)
 {
 
-    eGBT_Tecla t = gbt_obtener_tecla_presionada();
-    if (t == GBTK_ESCAPE)
+    if(input_salir()) // Verifica si se presiona "esc" que cierra el juego directamente.
     {
         *val = 0;
-        return;
     }
+
 
     switch (eg->estado)
     {
