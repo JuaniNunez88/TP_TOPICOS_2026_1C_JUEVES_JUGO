@@ -1,9 +1,22 @@
 #include "dibuja.h"
 #include "tablero.h"
+#include "fuente.h"
 #include "GBT/gbt.h"
+#include <stdio.h>
 
-#define TAM   10  // píxeles por celda
-#define TAM_M  4  // tamaño matriz de pieza
+#define TAM         20
+#define TAM_M        4
+
+#define TABLERO_X  220
+#define TABLERO_Y   40
+
+#define PANEL_X    450
+#define PANEL_Y     40
+
+#define COLOR_BORDE  8
+#define COLOR_TITULO 15
+#define COLOR_VALOR  14
+#define COLOR_FONDO_PANEL 1
 
 static void dibujar_bloque(int x, int y, int color)
 {
@@ -12,57 +25,136 @@ static void dibujar_bloque(int x, int y, int color)
             gbt_dibujar_pixel(x + j, y + i, color);
 }
 
-static void dibujar_pieza(t_estado_juego *eg)
+static void dibujar_rect(int x, int y, int ancho, int alto, int color)
 {
-    for (int i = 0; i < TAM_M; i++)
-        for (int j = 0; j < TAM_M; j++)
-            if (eg->pieza_actual->tamano[i][j] == 1)
-                dibujar_bloque((eg->pieza_x + j) * TAM,
-                               (eg->pieza_y + i) * TAM,
-                               eg->pieza_actual->c);
+    for (int i = 0; i < alto; i++)
+        for (int j = 0; j < ancho; j++)
+            gbt_dibujar_pixel(x + j, y + i, color);
+}
+
+static void dibujar_borde(int x, int y, int ancho, int alto, int color)
+{
+    for (int j = 0; j < ancho; j++)
+    {
+        gbt_dibujar_pixel(x + j, y,            color);
+        gbt_dibujar_pixel(x + j, y + alto - 1, color);
+    }
+    for (int i = 0; i < alto; i++)
+    {
+        gbt_dibujar_pixel(x,             y + i, color);
+        gbt_dibujar_pixel(x + ancho - 1, y + i, color);
+    }
 }
 
 static void dibujar_tablero()
 {
+    dibujar_rect(TABLERO_X, TABLERO_Y, COLUMNAS * TAM, FILAS * TAM, 0);
+
     for (int i = 0; i < FILAS; i++)
         for (int j = 0; j < COLUMNAS; j++)
         {
             int val = tablero_get(i, j);
             if (val != 0)
-                dibujar_bloque(j * TAM, i * TAM, val);
+                dibujar_bloque(TABLERO_X + j * TAM, TABLERO_Y + i * TAM, val);
         }
+
+    dibujar_borde(TABLERO_X - 1, TABLERO_Y - 1,
+                  COLUMNAS * TAM + 2, FILAS * TAM + 2, COLOR_BORDE);
 }
+
+static void dibujar_pieza(t_estado_juego *eg)
+{
+    for (int i = 0; i < TAM_M; i++)
+        for (int j = 0; j < TAM_M; j++)
+            if (eg->pieza_actual->tamano[i][j] == 1)
+                dibujar_bloque(TABLERO_X + (eg->pieza_x + j) * TAM,
+                               TABLERO_Y + (eg->pieza_y + i) * TAM,
+                               eg->pieza_actual->c);
+}
+
+static void dibujar_pieza_siguiente(t_estado_juego *eg)
+{
+    if (eg->pieza_siguiente == NULL)
+        return;
+
+    int prev_x = PANEL_X;
+    int prev_y = PANEL_Y + 142;
+    dibujar_rect(prev_x, prev_y, 4 * TAM, 4 * TAM, 0);
+    dibujar_borde(prev_x - 1, prev_y - 1, 4 * TAM + 2, 4 * TAM + 2, COLOR_BORDE);
+
+    for (int i = 0; i < TAM_M; i++)
+        for (int j = 0; j < TAM_M; j++)
+            if (eg->pieza_siguiente->tamano[i][j] == 1)
+                dibujar_bloque(prev_x + j * TAM,
+                               prev_y + i * TAM,
+                               eg->pieza_siguiente->c);
+}
+
+
+static void dibujar_panel(t_estado_juego *eg)
+{
+    char buf[16];
+    const t_fuente *fg = fuente_get_8x16();
+    const t_fuente *fc = fuente_get_8x8();
+
+
+    dibujar_rect(PANEL_X - 4, PANEL_Y - 4, 180, 340, COLOR_FONDO_PANEL);
+    dibujar_borde(PANEL_X - 4, PANEL_Y - 4, 180, 340, COLOR_BORDE);
+
+    fuente_dibujar_texto(fg, "SCORE", PANEL_X, PANEL_Y, COLOR_TITULO);
+    sprintf(buf, "%d", eg->puntaje);
+    fuente_dibujar_texto(fc, buf, PANEL_X, PANEL_Y + 22, COLOR_VALOR);
+
+    fuente_dibujar_texto(fg, "NIVEL", PANEL_X, PANEL_Y + 60, COLOR_TITULO);
+    fuente_dibujar_texto(fc, "1", PANEL_X, PANEL_Y + 82, COLOR_VALOR);
+
+    // NEXT
+    fuente_dibujar_texto(fg, "NEXT", PANEL_X, PANEL_Y + 120, COLOR_TITULO);
+    dibujar_pieza_siguiente(eg);
+}
+
 
 static void render_menu()
 {
-    for (int i = 0; i < 40; i++)
-        for (int j = 0; j < 200; j++)
-            gbt_dibujar_pixel(60 + j, 80 + i, 4);
+    const t_fuente *fg = fuente_get_8x16();
+    const t_fuente *fc = fuente_get_8x8();
 
-    for (int i = 0; i < 10; i++)
-        for (int j = 0; j < 140; j++)
-            gbt_dibujar_pixel(90 + j, 160 + i, 3);
+    dibujar_rect(180, 140, 280, 50, 4);
+    dibujar_borde(180, 140, 280, 50, COLOR_BORDE);
+
+    fuente_dibujar_texto(fg, "TETRIS", 270, 155, COLOR_TITULO);
 }
 
 static void render_juego(t_estado_juego *eg)
 {
     dibujar_tablero();
     dibujar_pieza(eg);
+    dibujar_panel(eg);
 }
 
 static void render_pausa(t_estado_juego *eg)
 {
-    render_juego(eg); // tablero detrás
-    for (int i = 0; i < 20; i++)
-        for (int j = 0; j < 160; j++)
-            gbt_dibujar_pixel(80 + j, 100 + i, 4);
+    render_juego(eg);
+    dibujar_rect(240, 210, 160, 50, 1);
+    dibujar_borde(240, 210, 160, 50, COLOR_BORDE);
+    fuente_dibujar_texto(fuente_get_8x16(), "PAUSA",     278, 220, COLOR_TITULO);
+    fuente_dibujar_texto(fuente_get_8x8(),  "P: CONTINUAR", 248, 244, COLOR_VALOR);
 }
 
-static void render_gameover()
+static void render_gameover(t_estado_juego *eg)
 {
-    for (int i = 0; i < 20; i++)
-        for (int j = 0; j < 160; j++)
-            gbt_dibujar_pixel(80 + j, 100 + i, 4);
+    char buf[16];
+
+    dibujar_rect(160, 180, 320, 110, 4);
+    dibujar_borde(160, 180, 320, 110, COLOR_BORDE);
+
+    fuente_dibujar_texto(fuente_get_8x16(), "GAME OVER", 210, 192, COLOR_TITULO);
+
+    fuente_dibujar_texto(fuente_get_8x8(), "SCORE:", 210, 226, COLOR_VALOR);
+    sprintf(buf, "%d", eg->puntaje);
+    fuente_dibujar_texto(fuente_get_8x8(), buf, 270, 226, COLOR_TITULO);
+
+    fuente_dibujar_texto(fuente_get_8x8(), "ENTER: VOLVER AL MENU", 200, 260, COLOR_BORDE);
 }
 
 void render_dibujar(t_estado_juego *eg)
@@ -74,7 +166,7 @@ void render_dibujar(t_estado_juego *eg)
         case ESTADO_MENU:     render_menu();        break;
         case ESTADO_JUGANDO:  render_juego(eg);     break;
         case ESTADO_PAUSA:    render_pausa(eg);     break;
-        case ESTADO_GAMEOVER: render_gameover();    break;
+        case ESTADO_GAMEOVER: render_gameover(eg);  break;
     }
 
     gbt_volcar_backbuffer();
