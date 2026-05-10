@@ -9,9 +9,15 @@
 
 static void spawnear_pieza(t_estado_juego *eg)
 {
-    eg->pieza_actual = elegir_pieza_aleatoria();
-    eg->pieza_x      = 4;
-    eg->pieza_y      = 0;
+    if (eg->pieza_siguiente == NULL)
+        eg->pieza_actual = elegir_pieza_aleatoria();
+    else
+        eg->pieza_actual = eg->pieza_siguiente;
+
+    eg->pieza_siguiente = elegir_pieza_aleatoria();
+
+    eg->pieza_x = 4;
+    eg->pieza_y = 0;
 }
 
 void fijar_pieza(t_estado_juego *eg)
@@ -57,13 +63,13 @@ static void limpiar_y_puntuar(t_estado_juego *eg)
     if (lineas > 0)
         eg->puntaje += (lineas * 100) + ((lineas - 1) * 50);
 }
-
 void juego_iniciar(t_estado_juego *eg)
 {
-    eg->estado         = ESTADO_MENU;
-    eg->puntaje        = 0;
+    eg->estado          = ESTADO_MENU;
+    eg->puntaje         = 0;
     eg->juego_terminado = 0;
-    eg->timer_caida    = 0;
+    eg->timer_caida     = 0;
+    eg->pieza_siguiente = NULL;
     inicializar_tablero();
     spawnear_pieza(eg);
 }
@@ -79,7 +85,6 @@ void juego_actualizar(t_estado_juego *eg, int *val)
 
     switch (eg->estado)
     {
-    // ------------------------
     case ESTADO_MENU:
         if (input_enter())
         {
@@ -87,15 +92,14 @@ void juego_actualizar(t_estado_juego *eg, int *val)
             eg->puntaje         = 0;
             eg->juego_terminado = 0;
             eg->timer_caida     = 0;
+            eg->pieza_siguiente = NULL;
             spawnear_pieza(eg);
             eg->estado = ESTADO_JUGANDO;
         }
         break;
 
-    // ------------------------
     case ESTADO_JUGANDO:
     {
-
         int nueva_x = eg->pieza_x;
         if (input_derecha())  nueva_x++;
         if (input_izquierda()) nueva_x--;
@@ -106,6 +110,7 @@ void juego_actualizar(t_estado_juego *eg, int *val)
 
         if (input_arriba())
             rotarPieza(eg->pieza_actual);
+
 
         if (input_abajo())
         {

@@ -6,7 +6,7 @@
 typedef struct
 {
     int tamano[TMAT][TMAT];
-    int c; // color
+    int c;
 } t_piezaL;
 
 t_piezaL* elegir_pieza_aleatoria();

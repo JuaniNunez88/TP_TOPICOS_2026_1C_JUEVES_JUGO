@@ -2,6 +2,7 @@
 #define JUEGO_H_INCLUDED
 
 #include "piezas.h"
+#include "resolucion.h"
 
 typedef enum {
     ESTADO_MENU,
@@ -18,6 +19,8 @@ typedef struct {
     e_estado  estado;
     int       timer_caida;
     t_piezaL *pieza_actual;
+    t_piezaL *pieza_siguiente;
+    t_resolucion res;
 } t_estado_juego;
 
 void juego_iniciar   (t_estado_juego *eg);
