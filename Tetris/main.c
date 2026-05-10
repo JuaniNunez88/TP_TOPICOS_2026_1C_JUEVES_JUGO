@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
     eg.res = res;
     juego_iniciar(&eg);
 
+    input_inicializar(); // ******
     int val = 1;
     while (val)
     {
@@ -42,7 +43,7 @@ int main(int argc, char *argv[])
         render_dibujar(&eg);
         gbt_esperar(16);
     }
-
+    input_finalizar();
     gbt_cerrar();
     return 0;
 }
