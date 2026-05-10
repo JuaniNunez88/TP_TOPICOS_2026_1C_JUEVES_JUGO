@@ -11,4 +11,7 @@ int  input_pausa();
 
 int input_salir();
 
+void input_inicializar(); // para iniciar en main
+void input_finalizar(); // para terminar en main
+
 #endif // DETECCION_TECLA_H_INCLUDED

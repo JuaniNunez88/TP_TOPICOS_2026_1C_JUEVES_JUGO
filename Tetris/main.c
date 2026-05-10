@@ -22,6 +22,7 @@ int main()
     t_estado_juego eg;
     juego_iniciar(&eg);
 
+    input_inicializar(); // ******
     int val = 1;
     while (val)
     {
@@ -33,7 +34,7 @@ int main()
 
         printf("Puntaje: %d\n", eg.puntaje);
     }
-
+    input_finalizar();
     gbt_cerrar();
     return 0;
 }
