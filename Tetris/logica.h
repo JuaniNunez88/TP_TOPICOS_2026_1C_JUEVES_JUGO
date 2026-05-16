@@ -21,6 +21,13 @@ typedef struct {
     t_piezaL *pieza_actual;
     t_piezaL *pieza_siguiente;
     t_resolucion res;
+
+    int   piezas_caidas;
+    float intervalo_caida_ms;
+    int   timer_fijacion;
+    int   esperando_fijar;
+    int   nivel;
+    int   lineas_limpiadas;
 } t_estado_juego;
 
 void juego_iniciar   (t_estado_juego *eg);

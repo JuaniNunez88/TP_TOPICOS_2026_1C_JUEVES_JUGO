@@ -13,9 +13,9 @@
 #define PANEL_X    450
 #define PANEL_Y     40
 
-#define COLOR_BORDE  8
-#define COLOR_TITULO 15
-#define COLOR_VALOR  14
+#define COLOR_BORDE       8
+#define COLOR_TITULO     15
+#define COLOR_VALOR      14
 #define COLOR_FONDO_PANEL 1
 
 static void dibujar_bloque(int x, int y, int color)
@@ -78,7 +78,7 @@ static void dibujar_pieza_siguiente(t_estado_juego *eg)
         return;
 
     int prev_x = PANEL_X;
-    int prev_y = PANEL_Y + 142;
+    int prev_y = PANEL_Y + 256;
     dibujar_rect(prev_x, prev_y, 4 * TAM, 4 * TAM, 0);
     dibujar_borde(prev_x - 1, prev_y - 1, 4 * TAM + 2, 4 * TAM + 2, COLOR_BORDE);
 
@@ -97,31 +97,40 @@ static void dibujar_panel(t_estado_juego *eg)
     const t_fuente *fg = fuente_get_8x16();
     const t_fuente *fc = fuente_get_8x8();
 
+    dibujar_rect (PANEL_X - 4, PANEL_Y - 4, 180, 370, COLOR_FONDO_PANEL);
+    dibujar_borde(PANEL_X - 4, PANEL_Y - 4, 180, 370, COLOR_BORDE);
 
-    dibujar_rect(PANEL_X - 4, PANEL_Y - 4, 180, 340, COLOR_FONDO_PANEL);
-    dibujar_borde(PANEL_X - 4, PANEL_Y - 4, 180, 340, COLOR_BORDE);
-
-    fuente_dibujar_texto(fg, "SCORE", PANEL_X, PANEL_Y, COLOR_TITULO);
+    /* SCORE */
+    fuente_dibujar_texto(fg, "SCORE", PANEL_X, PANEL_Y,      COLOR_TITULO);
     sprintf(buf, "%d", eg->puntaje);
-    fuente_dibujar_texto(fc, buf, PANEL_X, PANEL_Y + 22, COLOR_VALOR);
+    fuente_dibujar_texto(fc, buf,     PANEL_X, PANEL_Y + 20, COLOR_VALOR);
 
-    fuente_dibujar_texto(fg, "NIVEL", PANEL_X, PANEL_Y + 60, COLOR_TITULO);
-    fuente_dibujar_texto(fc, "1", PANEL_X, PANEL_Y + 82, COLOR_VALOR);
+    /* NIVEL */
+    fuente_dibujar_texto(fg, "NIVEL", PANEL_X, PANEL_Y + 40, COLOR_TITULO);
+    sprintf(buf, "%d", eg->nivel);
+    fuente_dibujar_texto(fc, buf,     PANEL_X, PANEL_Y + 60, COLOR_VALOR);
 
-    // NEXT
-    fuente_dibujar_texto(fg, "NEXT", PANEL_X, PANEL_Y + 120, COLOR_TITULO);
+    /* CAIDA */
+    fuente_dibujar_texto(fg, "CAIDA", PANEL_X, PANEL_Y + 80,  COLOR_TITULO);
+    sprintf(buf, "%d MS", (int)eg->intervalo_caida_ms);
+    fuente_dibujar_texto(fc, buf,     PANEL_X, PANEL_Y + 100, COLOR_VALOR);
+
+    /* LINEAS */
+    fuente_dibujar_texto(fg, "LINEAS", PANEL_X, PANEL_Y + 120, COLOR_TITULO);
+    sprintf(buf, "%d", eg->lineas_limpiadas);
+    fuente_dibujar_texto(fc, buf,      PANEL_X, PANEL_Y + 140, COLOR_VALOR);
+
+    /* NEXT */
+    fuente_dibujar_texto(fg, "NEXT", PANEL_X, PANEL_Y + 160, COLOR_TITULO);
     dibujar_pieza_siguiente(eg);
 }
-
 
 static void render_menu()
 {
     const t_fuente *fg = fuente_get_8x16();
-    const t_fuente *fc = fuente_get_8x8();
 
-    dibujar_rect(180, 140, 280, 50, 4);
+    dibujar_rect (180, 140, 280, 50, 4);
     dibujar_borde(180, 140, 280, 50, COLOR_BORDE);
-
     fuente_dibujar_texto(fg, "TETRIS", 270, 155, COLOR_TITULO);
 }
 
@@ -135,9 +144,9 @@ static void render_juego(t_estado_juego *eg)
 static void render_pausa(t_estado_juego *eg)
 {
     render_juego(eg);
-    dibujar_rect(240, 210, 160, 50, 1);
+    dibujar_rect (240, 210, 160, 50, 1);
     dibujar_borde(240, 210, 160, 50, COLOR_BORDE);
-    fuente_dibujar_texto(fuente_get_8x16(), "PAUSA",     278, 220, COLOR_TITULO);
+    fuente_dibujar_texto(fuente_get_8x16(), "PAUSA",       278, 220, COLOR_TITULO);
     fuente_dibujar_texto(fuente_get_8x8(),  "P: CONTINUAR", 248, 244, COLOR_VALOR);
 }
 
@@ -145,7 +154,7 @@ static void render_gameover(t_estado_juego *eg)
 {
     char buf[16];
 
-    dibujar_rect(160, 180, 320, 110, 4);
+    dibujar_rect (160, 180, 320, 110, 4);
     dibujar_borde(160, 180, 320, 110, COLOR_BORDE);
 
     fuente_dibujar_texto(fuente_get_8x16(), "GAME OVER", 210, 192, COLOR_TITULO);
@@ -163,10 +172,10 @@ void render_dibujar(t_estado_juego *eg)
 
     switch (eg->estado)
     {
-        case ESTADO_MENU:     render_menu();        break;
-        case ESTADO_JUGANDO:  render_juego(eg);     break;
-        case ESTADO_PAUSA:    render_pausa(eg);     break;
-        case ESTADO_GAMEOVER: render_gameover(eg);  break;
+        case ESTADO_MENU:     render_menu();       break;
+        case ESTADO_JUGANDO:  render_juego(eg);    break;
+        case ESTADO_PAUSA:    render_pausa(eg);    break;
+        case ESTADO_GAMEOVER: render_gameover(eg); break;
     }
 
     gbt_volcar_backbuffer();
