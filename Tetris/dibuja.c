@@ -18,6 +18,28 @@
 #define COLOR_VALOR      14
 #define COLOR_FONDO_PANEL 1
 
+
+
+static void dibujar_cuadricula()
+{
+    int color = 8;
+    for( int c=0; c <= COLUMNAS; c++) // vert
+    {
+        for(int f=0; f<FILAS*TAM;f++)
+        {
+            gbt_dibujar_pixel(TABLERO_X + c*TAM,TABLERO_Y + f,color);
+        }
+    }
+    for( int f=0; f <= FILAS; f++) // Hor
+    {
+        for(int c=0; c<COLUMNAS*TAM;c++)
+        {
+            gbt_dibujar_pixel(TABLERO_X + c,TABLERO_Y + f*TAM,color);
+        }
+    }
+
+}
+
 static void dibujar_bloque(int x, int y, int color)
 {
     for (int i = 0; i < TAM; i++)
@@ -44,6 +66,7 @@ static void dibujar_borde(int x, int y, int ancho, int alto, int color)
         gbt_dibujar_pixel(x,             y + i, color);
         gbt_dibujar_pixel(x + ancho - 1, y + i, color);
     }
+
 }
 
 static void dibujar_tablero()
@@ -137,8 +160,10 @@ static void render_menu()
 static void render_juego(t_estado_juego *eg)
 {
     dibujar_tablero();
+    //dibujar_cuadricula();
     dibujar_pieza(eg);
     dibujar_panel(eg);
+    dibujar_cuadricula();
 }
 
 static void render_pausa(t_estado_juego *eg)
