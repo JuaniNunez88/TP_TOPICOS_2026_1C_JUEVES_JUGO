@@ -77,10 +77,6 @@ static void dibujar_pieza_siguiente(t_estado_juego *eg)
     if (eg->pieza_siguiente == NULL)
         return;
 
-    /*
-     * La preview de pieza siguiente se ubica debajo de "NEXT".
-     * NEXT esta en Y+220, el valor en Y+238, la preview en Y+256.
-     */
     int prev_x = PANEL_X;
     int prev_y = PANEL_Y + 256;
     dibujar_rect(prev_x, prev_y, 4 * TAM, 4 * TAM, 0);
@@ -94,23 +90,7 @@ static void dibujar_pieza_siguiente(t_estado_juego *eg)
                                eg->pieza_siguiente->c);
 }
 
-/*
- * Layout del panel (cada seccion ocupa 16px titulo + 14px valor + 10px margen = ~40px):
- *
- *  Y +  0  : titulo "SCORE"   (8x16)
- *  Y + 20  : valor  puntaje   (8x8)
- *  Y + 40  : titulo "NIVEL"   (8x16)
- *  Y + 60  : valor  nivel     (8x8)
- *  Y + 80  : titulo "CAIDA"   (8x16)
- *  Y +100  : valor  ms        (8x8)
- *  Y +120  : titulo "LINEAS"  (8x16)
- *  Y +140  : valor  lineas    (8x8)
- *  Y +160  : titulo "NEXT"    (8x16)
- *  Y +180  : (espacio)
- *  Y +196  : preview pieza siguiente (4*20 = 80px alto)
- *
- * Total panel: 340px de alto, encaja en la ventana VGA (480px).
- */
+
 static void dibujar_panel(t_estado_juego *eg)
 {
     char buf[16];

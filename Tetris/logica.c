@@ -6,23 +6,11 @@
 
 #define COLUMNAS 10
 #define FILAS    20
-
-/* Cada cuantas lineas limpiadas sube el nivel */
 #define LINEAS_POR_NIVEL 10
-
-/* Intervalo inicial de caida en ms */
 #define INTERVALO_INICIAL 1000.0f
-
-/* Cada frame el loop espera 16 ms (~62 fps).
-   Se usa para convertir ms -> frames. */
 #define MS_POR_FRAME 16.0f
 
-/* ---------- funciones internas ---------- */
 
-/*
- * Calcula el intervalo de caida segun cuantas piezas cayeron.
- * Baja 3% por cada grupo de 10 piezas fijadas.
- */
 static float calcular_intervalo(int nivel)
 {
     float intervalo = INTERVALO_INICIAL;
@@ -31,13 +19,7 @@ static float calcular_intervalo(int nivel)
         intervalo *= 0.80f;
     return intervalo;
 }
-
-/*
- * Devuelve el nivel actual segun lineas limpiadas totales.
- * Sube 1 nivel cada LINEAS_POR_NIVEL lineas.
- * Nivel minimo: 1.
- */
-static int calcular_nivel(int lineas_limpiadas)
+int calcular_nivel(int lineas_limpiadas)
 {
     return (lineas_limpiadas / LINEAS_POR_NIVEL) + 1;
 }
@@ -92,10 +74,7 @@ int choque_horiz(t_estado_juego *eg, int futura_x)
     return 0;
 }
 
-/*
- * Limpia lineas completas, acumula lineas totales,
- * recalcula nivel e intervalo, y suma puntaje escalado por nivel.
- */
+/
 static void limpiar_y_puntuar(t_estado_juego *eg)
 {
     int lineas = tablero_limpiar_lineas_completas();
@@ -104,16 +83,12 @@ static void limpiar_y_puntuar(t_estado_juego *eg)
         eg->lineas_limpiadas += lineas;
         eg->nivel             = calcular_nivel(eg->lineas_limpiadas);
 
-        /* Puntaje base por lineas * nivel actual */
         eg->puntaje += ((lineas * 100) + ((lineas - 1) * 50)) * eg->nivel;
         eg->intervalo_caida_ms = calcular_intervalo(eg->nivel);
     }
 }
 
-/*
- * Se llama cada vez que una pieza se fija definitivamente.
- * Actualiza contador, recalcula intervalo y spawnea la siguiente.
- */
+
 static void confirmar_fijacion(t_estado_juego *eg)
 {
     fijar_pieza(eg);
@@ -130,7 +105,7 @@ static void confirmar_fijacion(t_estado_juego *eg)
         eg->estado = ESTADO_GAMEOVER;
 }
 
-/* ---------- API publica ---------- */
+
 
 void juego_iniciar(t_estado_juego *eg)
 {
@@ -180,28 +155,24 @@ void juego_actualizar(t_estado_juego *eg, int *val)
 
     case ESTADO_JUGANDO:
     {
-        /* Movimiento horizontal */
+
         int nueva_x = eg->pieza_x;
         if (input_derecha())   nueva_x++;
         if (input_izquierda()) nueva_x--;
         if (!choque_horiz(eg, nueva_x))
             eg->pieza_x = nueva_x;
 
-        /* Rotacion */
+
         if (input_arriba())
             rotarPieza(eg->pieza_actual);
 
-        /*
-         * Caida manual (tecla abajo).
-         * Si hay colision al bajar: inicia espera de fijacion (no fija directo).
-         * Si no hay colision: baja y suma 1 punto extra escalado por nivel.
-         */
+
         if (input_abajo())
         {
             int nueva_y = eg->pieza_y + 1;
             if (choque_vert(eg, nueva_y))
             {
-                /* Forzar fijacion inmediata si el jugador empuja hacia abajo */
+
                 confirmar_fijacion(eg);
             }
             else
@@ -209,15 +180,11 @@ void juego_actualizar(t_estado_juego *eg, int *val)
                 eg->esperando_fijar = 0;
                 eg->timer_fijacion  = 0;
                 eg->pieza_y = nueva_y;
-                eg->puntaje += eg->nivel; /* puntos por caida manual, escala con nivel */
+                eg->puntaje += eg->nivel;
             }
         }
 
-        /*
-         * Caida automatica.
-         * Se convierte intervalo_caida_ms a frames (cada frame = 16 ms).
-         * El delay de fijacion es el 50% del intervalo de caida.
-         */
+
         int frames_caida    = (int)(eg->intervalo_caida_ms / MS_POR_FRAME);
         int frames_fijacion = (int)((eg->intervalo_caida_ms * 0.5f) / MS_POR_FRAME);
         if (frames_caida    < 1) frames_caida    = 1;
@@ -231,7 +198,7 @@ void juego_actualizar(t_estado_juego *eg, int *val)
 
             if (choque_vert(eg, nueva_y))
             {
-                /* Toca fondo: iniciar espera de fijacion si no estaba ya */
+
                 if (!eg->esperando_fijar)
                 {
                     eg->esperando_fijar = 1;
@@ -240,14 +207,14 @@ void juego_actualizar(t_estado_juego *eg, int *val)
             }
             else
             {
-                /* Puede seguir bajando: cancela cualquier espera previa */
+
                 eg->esperando_fijar = 0;
                 eg->timer_fijacion  = 0;
                 eg->pieza_y = nueva_y;
             }
         }
 
-        /* Espera de fijacion: el 50% del intervalo de caida */
+
         if (eg->esperando_fijar)
         {
             eg->timer_fijacion++;
