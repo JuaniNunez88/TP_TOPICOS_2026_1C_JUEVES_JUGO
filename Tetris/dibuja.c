@@ -66,6 +66,7 @@ static void dibujar_borde(int x, int y, int ancho, int alto, int color)
         gbt_dibujar_pixel(x,             y + i, color);
         gbt_dibujar_pixel(x + ancho - 1, y + i, color);
     }
+
 }
 
 static void dibujar_tablero()
