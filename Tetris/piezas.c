@@ -11,7 +11,7 @@ static t_piezaL piezaJ = {
     {{1,0,0,0},
      {1,1,1,0},
      {0,0,0,0},
-     {0,0,0,0}}, 1};
+     {0,0,0,0}}, 1, true};
 
 static t_piezaL piezaL = {
     {{0,0,1,0},
