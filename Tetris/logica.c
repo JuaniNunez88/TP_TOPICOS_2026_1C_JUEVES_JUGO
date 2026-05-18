@@ -74,7 +74,7 @@ int choque_horiz(t_estado_juego *eg, int futura_x)
     return 0;
 }
 
-/
+
 static void limpiar_y_puntuar(t_estado_juego *eg)
 {
     int lineas = tablero_limpiar_lineas_completas();
