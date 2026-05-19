@@ -74,7 +74,7 @@ int choque_horiz(t_estado_juego *eg, int futura_x)
     return 0;
 }
 
-/
+
 static void limpiar_y_puntuar(t_estado_juego *eg)
 {
     int lineas = tablero_limpiar_lineas_completas();
@@ -124,6 +124,30 @@ void juego_iniciar(t_estado_juego *eg)
     spawnear_pieza(eg);
 }
 
+static void validar_rotacion(t_estado_juego *p)
+{
+    rotarPieza(p->pieza_actual); // Primero la rota
+    if( !choque_horiz(p,p->pieza_x) && !choque_vert(p,p->pieza_y)) // si no caen fuera del tablero entonces sale
+    {
+        return;
+    }
+    int mover_lugares[] = {1,-1,2,-2}; // Para derecha y dsps izquierda
+    for(int k = 0; k<4; k++)
+    {
+        int nueva_x = p->pieza_x + mover_lugares[k];
+        if(!choque_horiz(p, nueva_x) && !choque_vert(p, p->pieza_y))
+        {
+            p->pieza_x = nueva_x;
+            return;
+        }
+    }
+    rotarPieza(p->pieza_actual); // Volver a estado original
+    rotarPieza(p->pieza_actual);
+    rotarPieza(p->pieza_actual);
+}
+
+
+
 void juego_actualizar(t_estado_juego *eg, int *val)
 {
     if (input_salir())
@@ -163,8 +187,9 @@ void juego_actualizar(t_estado_juego *eg, int *val)
             eg->pieza_x = nueva_x;
 
 
-        if (input_arriba())
-            rotarPieza(eg->pieza_actual);
+        if (input_arriba()) // No verifica por eso falla !!!
+            //rotarPieza(eg->pieza_actual);
+            validar_rotacion(eg);
 
 
         if (input_abajo())

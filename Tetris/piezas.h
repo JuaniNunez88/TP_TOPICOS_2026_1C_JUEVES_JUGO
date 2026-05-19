@@ -2,11 +2,13 @@
 #define PIEZAS_H_INCLUDED
 
 #define TMAT 4
+#include <stdbool.h>
 
 typedef struct
 {
     int tamano[TMAT][TMAT];
     int c;
+    bool rotar;
 } t_piezaL;
 
 t_piezaL* elegir_pieza_aleatoria();
