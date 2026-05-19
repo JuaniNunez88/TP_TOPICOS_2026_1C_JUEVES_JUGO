@@ -131,7 +131,7 @@ static void validar_rotacion(t_estado_juego *p)
     {
         return;
     }
-    int mover_lugares[] = {1,-1,2,-2};
+    int mover_lugares[] = {1,-1,2,-2}; // Para derecha y dsps izquierda
     for(int k = 0; k<4; k++)
     {
         int nueva_x = p->pieza_x + mover_lugares[k];
