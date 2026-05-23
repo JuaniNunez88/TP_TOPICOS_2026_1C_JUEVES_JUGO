@@ -11,7 +11,6 @@
 #define ESCALA_MIN 1
 #define ESCALA_MAX 4
 
-// Aplica ancho/alto según el tipo de resolución
 static void aplicar_tipo(t_resolucion *r)
 {
     if (r->tipo == RES_CGA)
@@ -19,30 +18,28 @@ static void aplicar_tipo(t_resolucion *r)
         r->ancho = CGA_ANCHO;
         r->alto  = CGA_ALTO;
     }
-    else // RES_VGA
+    else
     {
         r->ancho = VGA_ANCHO;
         r->alto  = VGA_ALTO;
     }
 }
 
-// ============================================================
+int resolucion_escala_default(e_resolucion tipo)
+{
+    return (tipo == RES_CGA) ? 2 : 1;
+}
+
 void resolucion_iniciar(t_resolucion *r)
 {
     r->tipo   = RES_VGA;
-    r->escala = 1;
+    r->escala = resolucion_escala_default(RES_VGA);
     aplicar_tipo(r);
 }
 
-// ============================================================
-// Parsea argv[1] = "CGA" o "VGA"
-//         argv[2] = factor de escala ("1", "2", ...)
-// Devuelve 1 si parseó al menos la resolución, 0 si usó defaults
-// ============================================================
 int resolucion_desde_args(t_resolucion *r, int argc, char *argv[])
 {
-    resolucion_iniciar(r); // parte desde defaults
-
+    resolucion_iniciar(r);
     if (argc < 2)
         return 0;
 
@@ -56,6 +53,7 @@ int resolucion_desde_args(t_resolucion *r, int argc, char *argv[])
         return 0;
     }
 
+    r->escala = resolucion_escala_default(r->tipo);
     aplicar_tipo(r);
 
     if (argc >= 3)
@@ -64,17 +62,16 @@ int resolucion_desde_args(t_resolucion *r, int argc, char *argv[])
         if (escala >= ESCALA_MIN && escala <= ESCALA_MAX)
             r->escala = escala;
         else
-            printf("Escala %d fuera de rango [%d-%d]. Usando 1.\n",
-                   escala, ESCALA_MIN, ESCALA_MAX);
+            printf("Escala %d fuera de rango [%d-%d]. Usando %d.\n",
+                   escala, ESCALA_MIN, ESCALA_MAX, r->escala);
     }
-
     return 1;
 }
 
-// ============================================================
 void resolucion_set(t_resolucion *r, e_resolucion tipo)
 {
-    r->tipo = tipo;
+    r->tipo   = tipo;
+    r->escala = resolucion_escala_default(tipo);
     aplicar_tipo(r);
 }
 

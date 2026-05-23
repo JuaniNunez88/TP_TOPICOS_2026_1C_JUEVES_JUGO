@@ -1,120 +1,118 @@
-
 #include "deteccion_tecla.h"
 #include "GBT/gbt.h"
 
-#define DELAY_ESTANDAR 0.20 // Tiempo que el programa espera post primer movimiento. Sirve para q un toque minimo no haga repeticion
-#define DELAY_REPETIR 0.08 // cada cuanto tiempo se mueve YA durante repeticion
-
-//static int izq, der, abajo, enter, pausa, arriba, salir;
-static int enter, pausa, arriba, salir;
+#define DELAY_ESTANDAR 0.20
+#define DELAY_REPETIR  0.08
 
 typedef struct
 {
-    eGBT_Tecla tecla;
-    tGBT_Temporizador *timer_delay; // Punteros a direccion de inicio del temporizador pq es lo que me devuelve la GBT
-    tGBT_Temporizador *timer_repeticion; // Punteros a direccion de inicio de temporizador
+    eGBT_Tecla        tecla;
+    tGBT_Temporizador *timer_delay;
+    tGBT_Temporizador *timer_repeticion;
     int estado;
     int espera;
-}tRepeTecla;
+} tRepeTecla;
 
 static tRepeTecla izq;
 static tRepeTecla der;
 static tRepeTecla abajo;
-static int enter, pausa, arriba, salir;
 
+static int enter, pausa, arriba, salir;
+static int press_arriba, press_abajo, press_izq, press_der;
+
+// -------------------------------------------------------
 static void repet_inicializar(tRepeTecla *ri, eGBT_Tecla tecla)
 {
-    // Crea 2 temporizadores, los pausa y pone estado inicial en 0.
-    ri->tecla =tecla;
-    ri->timer_delay = gbt_temporizador_crear(DELAY_ESTANDAR);
+    ri->tecla            = tecla;
+    ri->timer_delay      = gbt_temporizador_crear(DELAY_ESTANDAR);
     ri->timer_repeticion = gbt_temporizador_crear(DELAY_REPETIR);
-    ri->estado = 0;
-    ri->espera = 0;
-    gbt_temporizador_pausar( ri->timer_delay);
+    ri->estado           = 0;
+    ri->espera           = 0;
+    gbt_temporizador_pausar(ri->timer_delay);
     gbt_temporizador_pausar(ri->timer_repeticion);
-
 }
 
 static void repet_destruir(tRepeTecla *rd)
 {
-    // Libera memoria de temporizadores
-    gbt_temporizador_destruir( rd->timer_delay);
+    gbt_temporizador_destruir(rd->timer_delay);
     gbt_temporizador_destruir(rd->timer_repeticion);
-
 }
 
 static void repet_actualizar(tRepeTecla *ra)
 {
-    //Contiene la logica y setea estado.
     ra->estado = 0;
-
-    if(gbt_tecla_presionada(ra->tecla) ) // Se detecta PRESION de tecla (1)
+    if (gbt_tecla_presionada(ra->tecla))
     {
-        ra->estado = 1; // Se detecta presion de tecla
-        gbt_temporizador_reanudar( ra->timer_delay);
-        gbt_temporizador_pausar( ra->timer_repeticion);
+        ra->estado = 1;
+        gbt_temporizador_reanudar(ra->timer_delay);
+        gbt_temporizador_pausar(ra->timer_repeticion);
         ra->espera = 1;
     }
-    else if(gbt_tecla_sostenida(ra->tecla)) // tecla SOSTENIDA (2)
+    else if (gbt_tecla_sostenida(ra->tecla))
     {
-        if(ra->espera) // Si esto esta en 1 es pq ya antes se utilizo gbt_tecla_presionada()
+        if (ra->espera)
         {
-            if(gbt_temporizador_consumir(ra->timer_delay)) // Si el tiempo desde la ult llamada paso los 0.20 entonces retorna un uno
+            if (gbt_temporizador_consumir(ra->timer_delay))
             {
-                // Entramos a repetir los movimientos
                 ra->espera = 0;
-                gbt_temporizador_pausar( ra->timer_delay);
-                gbt_temporizador_reanudar( ra->timer_repeticion); // a partir de ahora vamos a empezar a repetir
+                gbt_temporizador_pausar(ra->timer_delay);
+                gbt_temporizador_reanudar(ra->timer_repeticion);
             }
         }
         else
         {
-            if(gbt_temporizador_consumir(ra->timer_repeticion) )
-            {
-                ra->estado = 1; // Se mueve cada 0,08 (ms)
-            }
+            if (gbt_temporizador_consumir(ra->timer_repeticion))
+                ra->estado = 1;
         }
     }
-    else // (3)
+    else
     {
-        // Se solto la tecla entonces se reinicia todo o ni se presiono
-        gbt_temporizador_pausar( ra->timer_delay);
-        gbt_temporizador_pausar( ra->timer_repeticion);
-        ra->espera = 0; // se resetea para proxima presion
+        gbt_temporizador_pausar(ra->timer_delay);
+        gbt_temporizador_pausar(ra->timer_repeticion);
+        ra->espera = 0;
     }
 }
 
-void input_inicializar(){
-    // Llama a autorepeat_inicializar para las 3 teclas "complicadas"
-    repet_inicializar(&izq, GBTK_IZQUIERDA);
-    repet_inicializar(&der, GBTK_DERECHA);
+// -------------------------------------------------------
+void input_inicializar()
+{
+    repet_inicializar(&izq,   GBTK_IZQUIERDA);
+    repet_inicializar(&der,   GBTK_DERECHA);
     repet_inicializar(&abajo, GBTK_ABAJO);
 }
 
-void input_finalizar(){
-    // Libera todo al cerrar el juego
+void input_finalizar()
+{
     repet_destruir(&izq);
     repet_destruir(&der);
     repet_destruir(&abajo);
 }
 
-void input_actualizar(){
-    // Actualiza las teclas simples y las 3 "complicadas"
+void input_actualizar()
+{
     arriba = gbt_tecla_presionada(GBTK_ARRIBA);
-    salir = gbt_tecla_presionada(GBTK_ESCAPE);
+    salir  = gbt_tecla_presionada(GBTK_ESCAPE);
     enter  = gbt_tecla_presionada(GBTK_ENTER);
     pausa  = gbt_tecla_presionada(GBTK_p);
 
-    //Teclas que se pueden repetir
+    press_arriba = gbt_tecla_presionada(GBTK_ARRIBA);
+    press_abajo  = gbt_tecla_presionada(GBTK_ABAJO);
+    press_izq    = gbt_tecla_presionada(GBTK_IZQUIERDA);
+    press_der    = gbt_tecla_presionada(GBTK_DERECHA);
+
     repet_actualizar(&izq);
     repet_actualizar(&der);
     repet_actualizar(&abajo);
 }
 
-int input_izquierda() { return izq.estado ;    }
-int input_derecha()   { return der.estado;    }
-int input_abajo()     { return abajo.estado;  }
-int input_arriba()    { return arriba; }
-int input_enter()     { return enter;  }
-int input_pausa()     { return pausa;  }
-int input_salir()     { return salir;  }
+int input_izquierda()      { return izq.estado;   }
+int input_derecha()        { return der.estado;   }
+int input_abajo()          { return abajo.estado; }
+int input_arriba()         { return arriba;       }
+int input_enter()          { return enter;        }
+int input_pausa()          { return pausa;        }
+int input_salir()          { return salir;        }
+int input_arriba_press()   { return press_arriba; }
+int input_abajo_press()    { return press_abajo;  }
+int input_izquierda_press(){ return press_izq;    }
+int input_derecha_press()  { return press_der;    }

@@ -13,16 +13,14 @@ typedef struct {
     int escala;
 } t_resolucion;
 
-void resolucion_iniciar(t_resolucion *r);
+void resolucion_iniciar    (t_resolucion *r);
+int  resolucion_desde_args (t_resolucion *r, int argc, char *argv[]);
+void resolucion_set        (t_resolucion *r, e_resolucion tipo);
+void resolucion_set_escala (t_resolucion *r, int escala);
 
-int resolucion_desde_args(t_resolucion *r, int argc, char *argv[]);
+int  resolucion_ancho_ventana(const t_resolucion *r);
+int  resolucion_alto_ventana (const t_resolucion *r);
 
-void resolucion_set(t_resolucion *r, e_resolucion tipo);
-
-void resolucion_set_escala(t_resolucion *r, int escala);
-
-int resolucion_ancho_ventana(const t_resolucion *r);
-
-int resolucion_alto_ventana(const t_resolucion *r);
+int  resolucion_escala_default(e_resolucion tipo);
 
 #endif // RESOLUCION_H_INCLUDED
