@@ -147,26 +147,26 @@ static void validar_rotacion(t_estado_juego *p)
 
 
 
-void juego_actualizar(t_estado_juego *eg, int *val)
+/*void juego_actualizar(t_estado_juego *eg, int *val)
 {
-    rotarPieza(p->pieza_actual);
-    if (!choque_horiz(p, p->pieza_x) && !choque_vert(p, p->pieza_y))
+    rotarPieza(eg->pieza_actual);
+    if (!choque_horiz(eg, eg->pieza_x) && !choque_vert(eg, eg->pieza_y))
         return;
 
     int mover_lugares[] = {1, -1, 2, -2};
     for (int k = 0; k < 4; k++)
     {
-        int nueva_x = p->pieza_x + mover_lugares[k];
-        if (!choque_horiz(p, nueva_x) && !choque_vert(p, p->pieza_y))
+        int nueva_x = eg->pieza_x + mover_lugares[k];
+        if (!choque_horiz(eg, nueva_x) && !choque_vert(eg, eg->pieza_y))
         {
-            p->pieza_x = nueva_x;
+            eg->pieza_x = nueva_x;
             return;
         }
     }
-    rotarPieza(p->pieza_actual);
-    rotarPieza(p->pieza_actual);
-    rotarPieza(p->pieza_actual);
-}
+    rotarPieza(eg->pieza_actual);
+    rotarPieza(eg->pieza_actual);
+    rotarPieza(eg->pieza_actual);
+}*/
 
 void juego_actualizar(t_estado_juego *eg, int *val)
 {
