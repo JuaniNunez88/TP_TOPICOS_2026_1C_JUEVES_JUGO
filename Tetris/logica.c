@@ -11,17 +11,18 @@
 #define MS_POR_FRAME 16.0f
 
 
-static float calcular_intervalo(int nivel)
+static float calcular_intervalo(int piezas_caidas)
 {
     float intervalo = INTERVALO_INICIAL;
+    int reducciones = piezas_caidas / 10;
 
-    for (int i = 1; i < nivel; i++)
-        intervalo *= 0.80f;
+    for (int i = 1; i < reducciones; i++)
+        intervalo *= 0.97f;
     return intervalo;
 }
-int calcular_nivel(int lineas_limpiadas)
+int calcular_nivel(int piezas_caidas)
 {
-    return (lineas_limpiadas / LINEAS_POR_NIVEL) + 1;
+    return (piezas_caidas / 10) + 1;
 }
 
 static void spawnear_pieza(t_estado_juego *eg)
@@ -74,17 +75,15 @@ int choque_horiz(t_estado_juego *eg, int futura_x)
     return 0;
 }
 
-/
+
 static void limpiar_y_puntuar(t_estado_juego *eg)
 {
     int lineas = tablero_limpiar_lineas_completas();
     if (lineas > 0)
     {
         eg->lineas_limpiadas += lineas;
-        eg->nivel             = calcular_nivel(eg->lineas_limpiadas);
 
         eg->puntaje += ((lineas * 100) + ((lineas - 1) * 50)) * eg->nivel;
-        eg->intervalo_caida_ms = calcular_intervalo(eg->nivel);
     }
 }
 
@@ -95,7 +94,9 @@ static void confirmar_fijacion(t_estado_juego *eg)
     limpiar_y_puntuar(eg);
 
     eg->piezas_caidas++;
-    eg->intervalo_caida_ms = calcular_intervalo(eg->nivel);
+    eg->nivel = calcular_nivel(eg->piezas_caidas);
+
+    eg->intervalo_caida_ms = calcular_intervalo(eg->piezas_caidas);
 
     eg->esperando_fijar = 0;
     eg->timer_fijacion  = 0;
@@ -123,6 +124,30 @@ void juego_iniciar(t_estado_juego *eg)
     inicializar_tablero();
     spawnear_pieza(eg);
 }
+
+static void validar_rotacion(t_estado_juego *p)
+{
+    rotarPieza(p->pieza_actual); // Primero la rota
+    if( !choque_horiz(p,p->pieza_x) && !choque_vert(p,p->pieza_y)) // si no caen fuera del tablero entonces sale
+    {
+        return;
+    }
+    int mover_lugares[] = {1,-1,2,-2}; // Para derecha y dsps izquierda
+    for(int k = 0; k<4; k++)
+    {
+        int nueva_x = p->pieza_x + mover_lugares[k];
+        if(!choque_horiz(p, nueva_x) && !choque_vert(p, p->pieza_y))
+        {
+            p->pieza_x = nueva_x;
+            return;
+        }
+    }
+    rotarPieza(p->pieza_actual); // Volver a estado original
+    rotarPieza(p->pieza_actual);
+    rotarPieza(p->pieza_actual);
+}
+
+
 
 void juego_actualizar(t_estado_juego *eg, int *val)
 {
@@ -155,16 +180,24 @@ void juego_actualizar(t_estado_juego *eg, int *val)
 
     case ESTADO_JUGANDO:
     {
-
+        int movio = 0;
         int nueva_x = eg->pieza_x;
         if (input_derecha())   nueva_x++;
         if (input_izquierda()) nueva_x--;
-        if (!choque_horiz(eg, nueva_x))
+
+        if (nueva_x != eg->pieza_x && !choque_horiz(eg, nueva_x))
+        {
+            movio = 1;
             eg->pieza_x = nueva_x;
+        }
 
 
-        if (input_arriba())
-            rotarPieza(eg->pieza_actual);
+        if (input_arriba()) // No verifica por eso falla !!!
+        {
+            validar_rotacion(eg);
+            movio = 1;
+        }
+            //rotarPieza(eg->pieza_actual);
 
 
         if (input_abajo())
@@ -214,6 +247,10 @@ void juego_actualizar(t_estado_juego *eg, int *val)
             }
         }
 
+        if (eg->esperando_fijar && movio)
+        {
+            eg->timer_fijacion = 0;
+        }
 
         if (eg->esperando_fijar)
         {
