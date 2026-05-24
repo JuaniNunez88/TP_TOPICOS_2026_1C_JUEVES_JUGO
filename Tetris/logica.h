@@ -36,4 +36,5 @@ void fijar_pieza     (t_estado_juego *eg);
 int  choque_vert     (t_estado_juego *eg, int futura_y);
 int  choque_horiz    (t_estado_juego *eg, int futura_x);
 
+
 #endif // JUEGO_H_INCLUDED
