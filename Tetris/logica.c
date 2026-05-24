@@ -34,16 +34,30 @@ static void spawnear_pieza(t_estado_juego *eg)
 
     eg->pieza_siguiente = elegir_pieza_aleatoria();
     eg->pieza_x = 4;
-    eg->pieza_y = 0;
+    eg->pieza_y = -2;//filas invisibles
 }
 
 void fijar_pieza(t_estado_juego *eg)
 {
     for (int i = 0; i < TMAT; i++)
+    {
         for (int j = 0; j < TMAT; j++)
+        {
             if (eg->pieza_actual->tamano[i][j] == 1)
-                tablero_set(eg->pieza_y + i, eg->pieza_x + j,
-                            eg->pieza_actual->tipo + 1);
+            {
+                int y = eg->pieza_y + i;
+
+                if (y >= 0)
+                {
+                    tablero_set(
+                        y,
+                        eg->pieza_x + j,
+                        eg->pieza_actual->tipo + 1
+                    );
+                }
+            }
+        }
+    }
 }
 
 int choque_vert(t_estado_juego *eg, int futura_y)
@@ -54,6 +68,8 @@ int choque_vert(t_estado_juego *eg, int futura_y)
             {
                 int pos_y = futura_y + i;
                 int pos_x = eg->pieza_x + j;
+                if (pos_y >= FILAS)
+                    return 1;
                 if (pos_y >= FILAS || tablero_get(pos_y, pos_x) != 0)
                     return 1;
             }
