@@ -29,6 +29,7 @@ typedef enum {
 
 typedef struct {
     e_estado_menu      estado;
+    e_resolucion resolucion_temp;
     e_opcion_principal opcion;
     e_opcion_cfg       cfg_opcion;
     char               nombre_buf[17];

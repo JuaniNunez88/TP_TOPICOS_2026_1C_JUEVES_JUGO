@@ -26,7 +26,12 @@ static void borde_rect(int x, int y, int w, int h, int color)
     }
 }
 
-static int slen(const char *s) { int n = 0; while (s[n]) n++; return n; }
+static int slen(const char *s)
+{
+    int n = 0;
+    while (s[n]) n++;
+    return n;
+}
 static int centrar(int chars, int area_x, int area_w)
 {
     return area_x + (area_w - chars * 9) / 2;
@@ -50,6 +55,7 @@ void menu_iniciar(t_menu *m)
     m->estado             = MENU_PRINCIPAL;
     m->opcion             = OP_JUGAR;
     m->cfg_opcion         = CFG_RESOLUCION;
+    m->resolucion_temp = RES_VGA;
     m->nombre_para_jugar  = 0;
     memset(m->nombre_buf, 0, sizeof(m->nombre_buf));
     m->nombre_len = 0;
@@ -62,7 +68,8 @@ void menu_ir_gameover(t_menu *m)
 
 static int actualizar_nombre(t_menu *m, t_stats *stats)
 {
-    static const eGBT_Tecla letras[26] = {
+    static const eGBT_Tecla letras[26] =
+    {
         GBTK_a, GBTK_b, GBTK_c, GBTK_d, GBTK_e, GBTK_f, GBTK_g,
         GBTK_h, GBTK_i, GBTK_j, GBTK_k, GBTK_l, GBTK_m, GBTK_n,
         GBTK_o, GBTK_p, GBTK_q, GBTK_r, GBTK_s, GBTK_t, GBTK_u,
@@ -142,8 +149,12 @@ int menu_actualizar(t_menu *m, t_config *cfg, t_stats *stats,
 
         if (input_enter() && m->cfg_opcion == CFG_VOLVER)
         {
+            cfg->resolucion = m->resolucion_temp;
+
             config_guardar(cfg);
+
             *res_cambio = 1;
+
             m->estado = MENU_PRINCIPAL;
         }
 
@@ -151,7 +162,12 @@ int menu_actualizar(t_menu *m, t_config *cfg, t_stats *stats,
         {
             int dir = input_derecha_press() ? 1 : -1;
             if (m->cfg_opcion == CFG_RESOLUCION)
-                cfg->resolucion = (cfg->resolucion == RES_VGA) ? RES_CGA : RES_VGA;
+            {
+                m->resolucion_temp =
+                    (m->resolucion_temp == RES_VGA)
+                    ? RES_CGA
+                    : RES_VGA;
+            }
             if (m->cfg_opcion == CFG_PALETA)
                 cfg->paleta = (cfg->paleta + PALETA_TOTAL + dir) % PALETA_TOTAL;
             if (m->cfg_opcion == CFG_VELOCIDAD)
@@ -186,12 +202,12 @@ int menu_actualizar(t_menu *m, t_config *cfg, t_stats *stats,
 }
 
 static void dibujar_principal(const t_menu *m, const t_config *cfg,
-                               const t_stats *stats)
+                              const t_stats *stats)
 {
     const t_paleta *p  = config_get_paleta(cfg);
     const t_fuente *fg = es_cga(cfg) ? fuente_get_8x8() : fuente_get_8x16();
     const t_fuente *fc = fuente_get_8x8();
-    int W = res_ancho(cfg), H = res_alto(cfg);
+    int W = res_ancho(cfg);//, H = res_alto(cfg);
     int cga = es_cga(cfg);
 
     int tw = cga ? 160 : 340;
@@ -235,8 +251,7 @@ static void dibujar_principal(const t_menu *m, const t_config *cfg,
                              centrar(slen(ops[i]), px, pw), oy, col);
     }
 
-    fuente_dibujar_texto(fc, "FLECHAS: NAVEGAR   ENTER: SELECCIONAR",
-                         centrar(37, 0, W), cga ? H - 12 : 420, p->borde);
+    //fuente_dibujar_texto(fc, "FLECHAS: NAVEGAR   ENTER: SELECCIONAR",centrar(37, 0, W), cga ? H - 12 : 420, p->borde);
 }
 
 static void dibujar_opciones(const t_menu *m, const t_config *cfg)
@@ -244,7 +259,7 @@ static void dibujar_opciones(const t_menu *m, const t_config *cfg)
     const t_paleta *p  = config_get_paleta(cfg);
     const t_fuente *fg = es_cga(cfg) ? fuente_get_8x8() : fuente_get_8x16();
     const t_fuente *fc = fuente_get_8x8();
-    int W = res_ancho(cfg), H = res_alto(cfg);
+    int W = res_ancho(cfg);//, H = res_alto(cfg);
     int cga = es_cga(cfg);
     char buf[16];
 
@@ -263,9 +278,13 @@ static void dibujar_opciones(const t_menu *m, const t_config *cfg)
     for (int j = 4; j < pw - 4; j++)
         gbt_dibujar_pixel(px + j, sep_y, p->borde);
 
-    struct { const char *label; const char *valor; } items[CFG_TOTAL];
+    struct
+    {
+        const char *label;
+        const char *valor;
+    } items[CFG_TOTAL];
     items[CFG_RESOLUCION].label = "RESOLUCION:";
-    items[CFG_RESOLUCION].valor = config_nombre_resolucion(cfg->resolucion);
+    items[CFG_RESOLUCION].valor = config_nombre_resolucion(m->resolucion_temp);
     items[CFG_PALETA].label     = "PALETA:";
     items[CFG_PALETA].valor     = config_nombre_paleta(cfg->paleta);
     sprintf(buf, "%d", cfg->velocidad);
@@ -291,8 +310,7 @@ static void dibujar_opciones(const t_menu *m, const t_config *cfg)
         iy += paso;
     }
 
-    fuente_dibujar_texto(fc, "< > CAMBIAR   ENTER: APLICAR Y VOLVER",
-                         centrar(37, 0, W), cga ? H - 12 : 390, p->borde);
+   // fuente_dibujar_texto(fc, "< > CAMBIAR   ENTER: APLICAR Y VOLVER",centrar(37, 0, W), cga ? H - 12 : 390, p->borde);
 }
 
 static void dibujar_nombre(const t_menu *m, const t_config *cfg)
@@ -322,7 +340,11 @@ static void dibujar_nombre(const t_menu *m, const t_config *cfg)
     char display[18];
     int  dlen = 0;
     const char *nb = m->nombre_buf;
-    while (nb[dlen]) { display[dlen] = nb[dlen]; dlen++; }
+    while (nb[dlen])
+    {
+        display[dlen] = nb[dlen];
+        dlen++;
+    }
     display[dlen++] = '_';
     display[dlen]   = '\0';
     fuente_dibujar_texto(fg, display, bx + 4, by + 3, p->valor);
@@ -332,7 +354,7 @@ static void dibujar_nombre(const t_menu *m, const t_config *cfg)
 }
 
 static void dibujar_gameover(const t_menu *m, const t_config *cfg,
-                              const t_stats *stats, int puntaje_ultimo)
+                             const t_stats *stats, int puntaje_ultimo)
 {
     const t_paleta *p  = config_get_paleta(cfg);
     const t_fuente *fg = es_cga(cfg) ? fuente_get_8x8() : fuente_get_8x16();
@@ -394,10 +416,18 @@ void menu_dibujar(const t_menu *m, const t_config *cfg,
 
     switch (m->estado)
     {
-        case MENU_PRINCIPAL: dibujar_principal(m, cfg, stats);                break;
-        case MENU_OPCIONES:  dibujar_opciones(m, cfg);                        break;
-        case MENU_NOMBRE:    dibujar_nombre(m, cfg);                          break;
-        case MENU_GAMEOVER:  dibujar_gameover(m, cfg, stats, puntaje_ultimo); break;
+    case MENU_PRINCIPAL:
+        dibujar_principal(m, cfg, stats);
+        break;
+    case MENU_OPCIONES:
+        dibujar_opciones(m, cfg);
+        break;
+    case MENU_NOMBRE:
+        dibujar_nombre(m, cfg);
+        break;
+    case MENU_GAMEOVER:
+        dibujar_gameover(m, cfg, stats, puntaje_ultimo);
+        break;
     }
 
     gbt_volcar_backbuffer();
