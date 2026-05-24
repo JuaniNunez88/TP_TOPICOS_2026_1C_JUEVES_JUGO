@@ -55,7 +55,7 @@ void rotarPieza(t_piezaL *pieza_rotar)
 }
 
 
-void rotarPiezaIzq( t_piezaL *pieza_rotar)
+void rotarPiezaIzq( t_piezaL *pieza_rotar) // rotacion izq
 {
     int temp;
     if(!pieza_rotar->rotar) return;
