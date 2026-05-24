@@ -1,6 +1,6 @@
 #ifndef JUEGO_H_INCLUDED
 #define JUEGO_H_INCLUDED
-
+// test
 #include "piezas.h"
 #include "resolucion.h"
 
