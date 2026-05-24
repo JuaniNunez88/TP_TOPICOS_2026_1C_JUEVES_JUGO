@@ -107,7 +107,7 @@ static void confirmar_fijacion(t_estado_juego *eg)
 
 void juego_iniciar(t_estado_juego *eg)
 {
-    eg->estado               = ESTADO_MENU;
+    eg->estado               = ESTADO_JUGANDO;
     eg->puntaje              = 0;
     eg->juego_terminado      = 0;
     eg->timer_caida          = 0;

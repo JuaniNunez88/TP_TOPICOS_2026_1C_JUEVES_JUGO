@@ -57,8 +57,8 @@ static void dibujar_borde(int x, int y, int w, int h, int color)
 }
 
 static void dibujar_cuadricula(int tablero_x, int tablero_y,
-                                int tablero_w, int tablero_h,
-                                int tam, int color)
+                               int tablero_w, int tablero_h,
+                               int tam, int color)
 {
     for (int c = 0; c <= COLUMNAS; c++)
         for (int f = 0; f < tablero_h; f++)
@@ -68,7 +68,12 @@ static void dibujar_cuadricula(int tablero_x, int tablero_y,
             gbt_dibujar_pixel(tablero_x + c, tablero_y + f * tam, color);
 }
 
-static int slen(const char *s) { int n = 0; while (s[n]) n++; return n; }
+static int slen(const char *s)
+{
+    int n = 0;
+    while (s[n]) n++;
+    return n;
+}
 static int centrar(int chars, int area_x, int area_w)
 {
     return area_x + (area_w - chars * 9) / 2;
@@ -103,7 +108,7 @@ static void dibujar_tablero(const t_paleta *p, const t_resolucion *res)
 }
 
 static void dibujar_pieza(t_estado_juego *eg, const t_paleta *p,
-                           const t_resolucion *res)
+                          const t_resolucion *res)
 {
     int tam       = get_tam(res);
     int tablero_x = get_tablero_x(res);
@@ -119,8 +124,8 @@ static void dibujar_pieza(t_estado_juego *eg, const t_paleta *p,
 }
 
 static void dibujar_pieza_siguiente(t_estado_juego *eg, const t_paleta *p,
-                                     const t_resolucion *res,
-                                     int panel_x, int panel_w, int area_y)
+                                    const t_resolucion *res,
+                                    int panel_x, int panel_w, int area_y)
 {
     if (eg->pieza_siguiente == NULL) return;
 
@@ -158,7 +163,7 @@ static void dibujar_pieza_siguiente(t_estado_juego *eg, const t_paleta *p,
 }
 
 static void dibujar_panel(t_estado_juego *eg, const t_paleta *p,
-                           const t_stats *stats, const t_resolucion *res)
+                          const t_stats *stats, const t_resolucion *res)
 {
     char buf[32];
     int  tam     = get_tam(res);
@@ -251,7 +256,7 @@ static void dibujar_panel(t_estado_juego *eg, const t_paleta *p,
 }
 
 static void render_pausa(t_estado_juego *eg, const t_paleta *p,
-                          const t_stats *stats)
+                         const t_stats *stats)
 {
     const t_resolucion *res = &eg->res;
     int tam       = get_tam(res);
@@ -271,10 +276,23 @@ static void render_pausa(t_estado_juego *eg, const t_paleta *p,
 
     dibujar_rect (bx, by, bw, bh, p->fondo_banner);
     dibujar_borde(bx, by, bw, bh, p->borde);
-    fuente_dibujar_texto(fuente_get_8x8(), "PAUSA",
-                         centrar(slen("PAUSA"), bx, bw), by + 4, p->titulo);
+
+    const t_fuente *fp = (res->tipo == RES_CGA)
+                         ? fuente_get_8x8()
+                         : fuente_get_8x16();
+
+    int pausa_y = (res->tipo == RES_CGA) ? by + 4  : by + 8;
+    int cont_y  = (res->tipo == RES_CGA) ? by + 18 : by + 30;
+
+    fuente_dibujar_texto(fp, "PAUSA",
+                         centrar(slen("PAUSA"), bx, bw),
+                         pausa_y,
+                         p->titulo);
+
     fuente_dibujar_texto(fuente_get_8x8(), "P:CONTINUAR",
-                         centrar(slen("P:CONTINUAR"), bx, bw), by + 18, p->valor);
+                         centrar(slen("P:CONTINUAR"), bx, bw),
+                         cont_y,
+                         p->valor);
 }
 
 void render_dibujar(t_estado_juego *eg, const t_config *cfg,
@@ -287,18 +305,18 @@ void render_dibujar(t_estado_juego *eg, const t_config *cfg,
 
     switch (eg->estado)
     {
-        case ESTADO_JUGANDO:
-            dibujar_tablero(p, res);
-            dibujar_pieza(eg, p, res);
-            dibujar_panel(eg, p, stats, res);
-            break;
-        case ESTADO_PAUSA:
-            render_pausa(eg, p, stats);
-            break;
-        case ESTADO_GAMEOVER:
-            break;
-        default:
-            break;
+    case ESTADO_JUGANDO:
+        dibujar_tablero(p, res);
+        dibujar_pieza(eg, p, res);
+        dibujar_panel(eg, p, stats, res);
+        break;
+    case ESTADO_PAUSA:
+        render_pausa(eg, p, stats);
+        break;
+    case ESTADO_GAMEOVER:
+        break;
+    default:
+        break;
     }
 
     gbt_volcar_backbuffer();

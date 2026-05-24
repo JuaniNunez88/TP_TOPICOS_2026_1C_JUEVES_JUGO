@@ -27,7 +27,7 @@ static void aplicar_tipo(t_resolucion *r)
 
 int resolucion_escala_default(e_resolucion tipo)
 {
-    return (tipo == RES_CGA) ? 2 : 1;
+    return 1;//(tipo == RES_CGA) ? 2 : 1;
 }
 
 void resolucion_iniciar(t_resolucion *r)
