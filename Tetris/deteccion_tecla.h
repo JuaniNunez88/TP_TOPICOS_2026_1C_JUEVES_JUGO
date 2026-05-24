@@ -9,10 +9,13 @@ int input_izquierda();
 int input_derecha();
 int input_abajo();
 
-int input_arriba();
+
+//int input_arriba();
 int input_enter();
 int input_pausa();
 int input_salir();
+int input_rotarIzq();
+int input_rotarDer();
 
 int input_arriba_press();
 int input_abajo_press();

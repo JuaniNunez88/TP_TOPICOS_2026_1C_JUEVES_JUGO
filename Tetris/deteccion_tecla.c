@@ -17,7 +17,7 @@ static tRepeTecla izq;
 static tRepeTecla der;
 static tRepeTecla abajo;
 
-static int enter, pausa, arriba, salir;
+static int enter, pausa, arriba, salir, rotarIzq, rotarDer;
 static int press_arriba, press_abajo, press_izq, press_der;
 
 // -------------------------------------------------------
@@ -90,10 +90,11 @@ void input_finalizar()
 
 void input_actualizar()
 {
-    arriba = gbt_tecla_presionada(GBTK_ARRIBA);
+    rotarDer = gbt_tecla_presionada(GBTK_c);
     salir  = gbt_tecla_presionada(GBTK_ESCAPE);
     enter  = gbt_tecla_presionada(GBTK_ENTER);
     pausa  = gbt_tecla_presionada(GBTK_p);
+    rotarIzq = gbt_tecla_presionada(GBTK_z);
 
     press_arriba = gbt_tecla_presionada(GBTK_ARRIBA);
     press_abajo  = gbt_tecla_presionada(GBTK_ABAJO);
@@ -108,7 +109,7 @@ void input_actualizar()
 int input_izquierda()      { return izq.estado;   }
 int input_derecha()        { return der.estado;   }
 int input_abajo()          { return abajo.estado; }
-int input_arriba()         { return arriba;       }
+//int input_arriba()         { return arriba;       }
 int input_enter()          { return enter;        }
 int input_pausa()          { return pausa;        }
 int input_salir()          { return salir;        }
@@ -116,3 +117,6 @@ int input_arriba_press()   { return press_arriba; }
 int input_abajo_press()    { return press_abajo;  }
 int input_izquierda_press(){ return press_izq;    }
 int input_derecha_press()  { return press_der;    }
+
+int input_rotarIzq() { return rotarIzq; }
+int input_rotarDer() { return rotarDer; }
