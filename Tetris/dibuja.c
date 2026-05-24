@@ -115,12 +115,25 @@ static void dibujar_pieza(t_estado_juego *eg, const t_paleta *p,
     int tablero_y = get_tablero_y(res);
     int color     = p->pieza[eg->pieza_actual->tipo];
 
-    for (int i = 0; i < TAM_M; i++)
-        for (int j = 0; j < TAM_M; j++)
-            if (eg->pieza_actual->tamano[i][j] == 1)
-                dibujar_bloque(tablero_x + (eg->pieza_x + j) * tam,
-                               tablero_y + (eg->pieza_y + i) * tam,
-                               tam, color);
+   for (int i = 0; i < TAM_M; i++)
+{
+    for (int j = 0; j < TAM_M; j++)
+    {
+        if (eg->pieza_actual->tamano[i][j] == 1)
+        {
+            // No dibujar bloques en filas invisibles
+            if (eg->pieza_y + i < 0)
+                continue;
+
+            dibujar_bloque(
+                tablero_x + (eg->pieza_x + j) * tam,
+                tablero_y + (eg->pieza_y + i) * tam,
+                tam,
+                color
+            );
+        }
+    }
+}
 }
 
 static void dibujar_pieza_siguiente(t_estado_juego *eg, const t_paleta *p,
