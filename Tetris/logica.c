@@ -154,7 +154,7 @@ static void validar_rotacion(t_estado_juego *p, int sentido)
         rotarPiezaIzq(p->pieza_actual);
     } else {
         rotarPieza(p->pieza_actual);
-    }
+            }
     //rotarPieza(p->pieza_actual); // Volver a estado original
     //rotarPieza(p->pieza_actual);
     //rotarPieza(p->pieza_actual);
