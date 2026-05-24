@@ -98,8 +98,8 @@ static void dibujar_tablero(const t_paleta *p, const t_resolucion *res)
 
     dibujar_borde(tablero_x - 1, tablero_y - 1,
                   tablero_w + 2, tablero_h + 2, p->borde);
-    dibujar_cuadricula(tablero_x, tablero_y, tablero_w, tablero_h,
-                       tam, p->fondo_panel);
+    //dibujar_cuadricula(tablero_x, tablero_y, tablero_w, tablero_h,
+    //                   tam, p->fondo_panel);
 }
 
 static void dibujar_pieza(t_estado_juego *eg, const t_paleta *p,
@@ -262,6 +262,7 @@ static void render_pausa(t_estado_juego *eg, const t_paleta *p,
 
     dibujar_tablero(p, res);
     dibujar_pieza(eg, p, res);
+    dibujar_cuadricula( get_tablero_x(res), get_tablero_y(res), COLUMNAS*get_tam(res), FILAS*get_tam(res), get_tam(res), p->fondo_panel);
     dibujar_panel(eg, p, stats, res);
 
     int bw = (res->tipo == RES_CGA) ? 100 : 200;
@@ -290,6 +291,8 @@ void render_dibujar(t_estado_juego *eg, const t_config *cfg,
         case ESTADO_JUGANDO:
             dibujar_tablero(p, res);
             dibujar_pieza(eg, p, res);
+            dibujar_cuadricula( get_tablero_x(res), get_tablero_y(res), COLUMNAS*get_tam(res), FILAS*get_tam(res), get_tam(res), p->fondo_panel);
+    //
             dibujar_panel(eg, p, stats, res);
             break;
         case ESTADO_PAUSA:

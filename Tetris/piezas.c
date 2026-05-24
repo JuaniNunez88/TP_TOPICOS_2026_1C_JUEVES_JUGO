@@ -53,3 +53,30 @@ void rotarPieza(t_piezaL *pieza_rotar)
             pieza_rotar->tamano[i][TMAT - 1 - j] = temp;
         }
 }
+
+
+void rotarPiezaIzq( t_piezaL *pieza_rotar)
+{
+    int temp;
+    if(!pieza_rotar->rotar) return;
+
+    for(int i = 0; i < TMAT; i++)
+    {
+        for(int j=i+1; j<TMAT; j++)
+            {
+                temp = pieza_rotar->tamano[i][j];
+                pieza_rotar->tamano[i][j] = pieza_rotar->tamano[j][i];
+                pieza_rotar->tamano[j][i] = temp;
+            }
+    }
+    for(int j=0; j<TMAT; j++)
+        {
+            for(int i=0; i<TMAT/2; i++)
+            {
+                temp = pieza_rotar->tamano[i][j];
+                pieza_rotar->tamano[i][j] = pieza_rotar->tamano[TMAT-1-i][j];
+                pieza_rotar->tamano[TMAT-1-i][j] = temp;
+            }
+        }
+
+}

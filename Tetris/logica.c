@@ -123,9 +123,18 @@ void juego_iniciar(t_estado_juego *eg)
     spawnear_pieza(eg);
 }
 
-static void validar_rotacion(t_estado_juego *p)
+
+static void validar_rotacion(t_estado_juego *p, int sentido)
 {
-    rotarPieza(p->pieza_actual); // Primero la rota
+    if(sentido)
+    {
+        rotarPieza(p->pieza_actual);
+    } else {
+        rotarPiezaIzq(p->pieza_actual);
+    }
+
+
+    //rotarPieza(p->pieza_actual); // Primero la rota
     if( !choque_horiz(p,p->pieza_x) && !choque_vert(p,p->pieza_y)) // si no caen fuera del tablero entonces sale
     {
         return;
@@ -140,33 +149,17 @@ static void validar_rotacion(t_estado_juego *p)
             return;
         }
     }
-    rotarPieza(p->pieza_actual); // Volver a estado original
-    rotarPieza(p->pieza_actual);
-    rotarPieza(p->pieza_actual);
+    if(sentido)
+    {
+        rotarPiezaIzq(p->pieza_actual);
+    } else {
+        rotarPieza(p->pieza_actual);
+    }
+    //rotarPieza(p->pieza_actual); // Volver a estado original
+    //rotarPieza(p->pieza_actual);
+    //rotarPieza(p->pieza_actual);
 }
 
-
-
-/*void juego_actualizar(t_estado_juego *eg, int *val)
-{
-    rotarPieza(eg->pieza_actual);
-    if (!choque_horiz(eg, eg->pieza_x) && !choque_vert(eg, eg->pieza_y))
-        return;
-
-    int mover_lugares[] = {1, -1, 2, -2};
-    for (int k = 0; k < 4; k++)
-    {
-        int nueva_x = eg->pieza_x + mover_lugares[k];
-        if (!choque_horiz(eg, nueva_x) && !choque_vert(eg, eg->pieza_y))
-        {
-            eg->pieza_x = nueva_x;
-            return;
-        }
-    }
-    rotarPieza(eg->pieza_actual);
-    rotarPieza(eg->pieza_actual);
-    rotarPieza(eg->pieza_actual);
-}*/
 
 void juego_actualizar(t_estado_juego *eg, int *val)
 {
@@ -207,12 +200,13 @@ void juego_actualizar(t_estado_juego *eg, int *val)
         }
 
 
-        if (input_arriba()) // No verifica por eso falla !!!
+        if (input_rotarDer()) // No verifica por eso falla !!!
         {
-            validar_rotacion(eg);
+            validar_rotacion(eg,1);
             movio = 1;
         }
-            //rotarPieza(eg->pieza_actual);
+        if(input_rotarIzq())
+            validar_rotacion(eg,0);
 
 
         if (input_abajo())
