@@ -17,7 +17,7 @@ static tRepeTecla izq;
 static tRepeTecla der;
 static tRepeTecla abajo;
 
-static int enter, pausa, arriba, salir, rotarIzq, rotarDer;
+static int enter, pausa, salir, rotarIzq, rotarDer;
 static int press_arriba, press_abajo, press_izq, press_der;
 
 // -------------------------------------------------------
