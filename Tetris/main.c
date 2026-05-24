@@ -74,6 +74,7 @@ int main(int argc, char *argv[])
                 input_finalizar();
                 input_inicializar();
                 gbt_borrar_backbuffer(0);
+
                 gbt_volcar_backbuffer();
             }
 

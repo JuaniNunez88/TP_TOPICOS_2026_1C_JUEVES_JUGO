@@ -11,18 +11,18 @@
 #define MS_POR_FRAME      16.0f
 
 
-static float calcular_intervalo(int piezas_caidas)
+static float calcular_intervalo(int piezas_caidas, float intervalo_base)
 {
-    float intervalo = INTERVALO_INICIAL;
+    float intervalo = intervalo_base;
     int reducciones = piezas_caidas / 10;
 
-    for (int i = 1; i < reducciones; i++)
+    for (int i = 0; i < reducciones; i++)
         intervalo *= 0.97f;
     return intervalo;
 }
-int calcular_nivel(int piezas_caidas)
+int calcular_nivel(int lineas_limpiadas)
 {
-    return (piezas_caidas / 10) + 1;
+    return (lineas_limpiadas / 10) + 1;
 }
 
 static void spawnear_pieza(t_estado_juego *eg)
@@ -93,9 +93,9 @@ static void confirmar_fijacion(t_estado_juego *eg)
     limpiar_y_puntuar(eg);
 
     eg->piezas_caidas++;
-    eg->nivel = calcular_nivel(eg->piezas_caidas);
+    eg->nivel = calcular_nivel(eg->lineas_limpiadas);
 
-    eg->intervalo_caida_ms = calcular_intervalo(eg->piezas_caidas);
+    eg->intervalo_caida_ms = calcular_intervalo(eg->piezas_caidas,eg->intervalo_inicial_ms);
 
     eg->esperando_fijar = 0;
     eg->timer_fijacion  = 0;
