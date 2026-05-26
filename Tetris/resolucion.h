@@ -1,12 +1,14 @@
 #ifndef RESOLUCION_H_INCLUDED
 #define RESOLUCION_H_INCLUDED
 
-typedef enum {
+typedef enum
+{
     RES_CGA,
     RES_VGA
 } e_resolucion;
 
-typedef struct {
+typedef struct
+{
     e_resolucion tipo;
     int ancho;
     int alto;

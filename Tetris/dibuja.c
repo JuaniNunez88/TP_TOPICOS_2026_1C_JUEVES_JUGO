@@ -103,8 +103,6 @@ static void dibujar_tablero(const t_paleta *p, const t_resolucion *res)
 
     dibujar_borde(tablero_x - 1, tablero_y - 1,
                   tablero_w + 2, tablero_h + 2, p->borde);
-    //dibujar_cuadricula(tablero_x, tablero_y, tablero_w, tablero_h,
-    //                   tam, p->fondo_panel);
 }
 
 static void dibujar_pieza(t_estado_juego *eg, const t_paleta *p,
@@ -115,25 +113,24 @@ static void dibujar_pieza(t_estado_juego *eg, const t_paleta *p,
     int tablero_y = get_tablero_y(res);
     int color     = p->pieza[eg->pieza_actual->tipo];
 
-   for (int i = 0; i < TAM_M; i++)
-{
-    for (int j = 0; j < TAM_M; j++)
+    for (int i = 0; i < TAM_M; i++)
     {
-        if (eg->pieza_actual->tamano[i][j] == 1)
+        for (int j = 0; j < TAM_M; j++)
         {
-            // No dibujar bloques en filas invisibles
-            if (eg->pieza_y + i < 0)
-                continue;
+            if (eg->pieza_actual->tamano[i][j] == 1)
+            {
+                if (eg->pieza_y + i < 0)
+                    continue;
 
-            dibujar_bloque(
-                tablero_x + (eg->pieza_x + j) * tam,
-                tablero_y + (eg->pieza_y + i) * tam,
-                tam,
-                color
-            );
+                dibujar_bloque(
+                    tablero_x + (eg->pieza_x + j) * tam,
+                    tablero_y + (eg->pieza_y + i) * tam,
+                    tam,
+                    color
+                );
+            }
         }
     }
-}
 }
 
 static void dibujar_pieza_siguiente(t_estado_juego *eg, const t_paleta *p,
@@ -319,20 +316,19 @@ void render_dibujar(t_estado_juego *eg, const t_config *cfg,
 
     switch (eg->estado)
     {
-        case ESTADO_JUGANDO:
-            dibujar_tablero(p, res);
-            dibujar_pieza(eg, p, res);
-            dibujar_cuadricula( get_tablero_x(res), get_tablero_y(res), COLUMNAS*get_tam(res), FILAS*get_tam(res), get_tam(res), p->fondo_panel);
-    //
-            dibujar_panel(eg, p, stats, res);
-            break;
-        case ESTADO_PAUSA:
-            render_pausa(eg, p, stats);
-            break;
-        case ESTADO_GAMEOVER:
-            break;
-        default:
-            break;
+    case ESTADO_JUGANDO:
+        dibujar_tablero(p, res);
+        dibujar_pieza(eg, p, res);
+        dibujar_cuadricula( get_tablero_x(res), get_tablero_y(res), COLUMNAS*get_tam(res), FILAS*get_tam(res), get_tam(res), p->fondo_panel);
+        dibujar_panel(eg, p, stats, res);
+        break;
+    case ESTADO_PAUSA:
+        render_pausa(eg, p, stats);
+        break;
+    case ESTADO_GAMEOVER:
+        break;
+    default:
+        break;
     }
 
     gbt_volcar_backbuffer();

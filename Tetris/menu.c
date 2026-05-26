@@ -310,7 +310,7 @@ static void dibujar_opciones(const t_menu *m, const t_config *cfg)
         iy += paso;
     }
 
-   // fuente_dibujar_texto(fc, "< > CAMBIAR   ENTER: APLICAR Y VOLVER",centrar(37, 0, W), cga ? H - 12 : 390, p->borde);
+    // fuente_dibujar_texto(fc, "< > CAMBIAR   ENTER: APLICAR Y VOLVER",centrar(37, 0, W), cga ? H - 12 : 390, p->borde);
 }
 
 static void dibujar_nombre(const t_menu *m, const t_config *cfg)

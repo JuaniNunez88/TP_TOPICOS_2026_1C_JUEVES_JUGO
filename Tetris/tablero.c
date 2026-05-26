@@ -27,7 +27,11 @@ int tablero_limpiar_lineas_completas()
     {
         int linea_llena = 1;
         for (int j = 0; j < COLUMNAS; j++)
-            if (tablero_get(i, j) == 0) { linea_llena = 0; break; }
+            if (tablero_get(i, j) == 0)
+            {
+                linea_llena = 0;
+                break;
+            }
 
         if (linea_llena)
         {

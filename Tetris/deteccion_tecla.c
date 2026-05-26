@@ -20,7 +20,6 @@ static tRepeTecla abajo;
 static int enter, pausa, salir, rotarIzq, rotarDer;
 static int press_arriba, press_abajo, press_izq, press_der;
 
-// -------------------------------------------------------
 static void repet_inicializar(tRepeTecla *ri, eGBT_Tecla tecla)
 {
     ri->tecla            = tecla;
@@ -73,7 +72,6 @@ static void repet_actualizar(tRepeTecla *ra)
     }
 }
 
-// -------------------------------------------------------
 void input_inicializar()
 {
     repet_inicializar(&izq,   GBTK_IZQUIERDA);
@@ -109,7 +107,6 @@ void input_actualizar()
 int input_izquierda()      { return izq.estado;   }
 int input_derecha()        { return der.estado;   }
 int input_abajo()          { return abajo.estado; }
-//int input_arriba()         { return arriba;       }
 int input_enter()          { return enter;        }
 int input_pausa()          { return pausa;        }
 int input_salir()          { return salir;        }

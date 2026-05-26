@@ -9,8 +9,6 @@ int input_izquierda();
 int input_derecha();
 int input_abajo();
 
-
-//int input_arriba();
 int input_enter();
 int input_pausa();
 int input_salir();

@@ -4,7 +4,8 @@
 #define STATS_ARCHIVO    "tetris_stats.dat"
 #define STATS_MAX_NOMBRE 16
 
-typedef struct {
+typedef struct
+{
     char nombre[STATS_MAX_NOMBRE + 1];
     int  puntaje_max;
     char nombre_max[STATS_MAX_NOMBRE + 1];

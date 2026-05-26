@@ -4,14 +4,16 @@
 #include "config.h"
 #include "persona.h"
 
-typedef enum {
+typedef enum
+{
     MENU_PRINCIPAL = 0,
     MENU_OPCIONES,
     MENU_NOMBRE,
     MENU_GAMEOVER
 } e_estado_menu;
 
-typedef enum {
+typedef enum
+{
     OP_JUGAR = 0,
     OP_NOMBRE,
     OP_OPCIONES,
@@ -19,7 +21,8 @@ typedef enum {
     OP_TOTAL
 } e_opcion_principal;
 
-typedef enum {
+typedef enum
+{
     CFG_RESOLUCION = 0,
     CFG_PALETA,
     CFG_VELOCIDAD,
@@ -27,7 +30,8 @@ typedef enum {
     CFG_TOTAL
 } e_opcion_cfg;
 
-typedef struct {
+typedef struct
+{
     e_estado_menu      estado;
     e_resolucion resolucion_temp;
     e_opcion_principal opcion;

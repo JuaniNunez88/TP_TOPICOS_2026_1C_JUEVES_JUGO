@@ -6,7 +6,8 @@
 //              9=azul brillante 10=verde brillante 11=cyan brillante
 //              12=rojo brillante 13=magenta brillante 14=amarillo 15=blanco
 
-static const t_paleta PALETA_CLASICA_DATA = {
+static const t_paleta PALETA_CLASICA_DATA =
+{
     .pieza        = {11, 1, 6, 14, 10, 5, 4},
     //                I  J  L   O   S  T  Z
     .fondo_panel  = 1,
@@ -17,7 +18,8 @@ static const t_paleta PALETA_CLASICA_DATA = {
     .fondo_banner = 1,
 };
 
-static const t_paleta PALETA_NEON_DATA = {
+static const t_paleta PALETA_NEON_DATA =
+{
     .pieza        = {11, 9, 13, 14, 10, 12, 4},
     //                I  J   L   O   S   T  Z
     .fondo_panel  = 8,
@@ -29,7 +31,8 @@ static const t_paleta PALETA_NEON_DATA = {
 };
 
 
-static const t_paleta PALETA_PASTEL_DATA = {
+static const t_paleta PALETA_PASTEL_DATA =
+{
     .pieza        = {3, 9, 7, 15, 2, 5, 6},
     //               I  J  L   O  S  T  Z
     .fondo_panel  = 7,
@@ -44,9 +47,12 @@ const t_paleta *config_get_paleta(const t_config *cfg)
 {
     switch (cfg->paleta)
     {
-        case PALETA_NEON:   return &PALETA_NEON_DATA;
-        case PALETA_PASTEL: return &PALETA_PASTEL_DATA;
-        default:            return &PALETA_CLASICA_DATA;
+    case PALETA_NEON:
+        return &PALETA_NEON_DATA;
+    case PALETA_PASTEL:
+        return &PALETA_PASTEL_DATA;
+    default:
+        return &PALETA_CLASICA_DATA;
     }
 }
 
@@ -54,10 +60,14 @@ const char *config_nombre_paleta(e_paleta p)
 {
     switch (p)
     {
-        case PALETA_CLASICA: return "CLASICA";
-        case PALETA_NEON:    return "NEON";
-        case PALETA_PASTEL:  return "PASTEL";
-        default:             return "?";
+    case PALETA_CLASICA:
+        return "CLASICA";
+    case PALETA_NEON:
+        return "NEON";
+    case PALETA_PASTEL:
+        return "PASTEL";
+    default:
+        return "?";
     }
 }
 

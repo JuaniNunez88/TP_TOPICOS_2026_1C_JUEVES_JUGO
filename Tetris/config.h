@@ -5,14 +5,16 @@
 
 #define CONFIG_ARCHIVO "tetris_config.dat"
 
-typedef enum {
+typedef enum
+{
     PALETA_CLASICA = 0,
     PALETA_NEON,
     PALETA_PASTEL,
     PALETA_TOTAL
 } e_paleta;
 
-typedef struct {
+typedef struct
+{
     int pieza[7];
     int fondo_panel;
     int borde;
@@ -22,7 +24,8 @@ typedef struct {
     int fondo_banner;
 } t_paleta;
 
-typedef struct {
+typedef struct
+{
     e_resolucion resolucion;
     e_paleta     paleta;
     int          velocidad;

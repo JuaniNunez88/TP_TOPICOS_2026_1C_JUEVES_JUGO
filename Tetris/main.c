@@ -91,19 +91,19 @@ int main(int argc, char *argv[])
 
             menu_dibujar(&menu, &cfg, &stats, puntaje_ultimo);
 
-          if (resultado == 1)
-{
-    eg.res = res;
+            if (resultado == 1)
+            {
+                eg.res = res;
 
-    juego_iniciar(&eg);
+                juego_iniciar(&eg);
 
-    eg.intervalo_inicial_ms = 1600.0f - (float)(cfg.velocidad * 16);
-    eg.intervalo_caida_ms   = eg.intervalo_inicial_ms;
+                eg.intervalo_inicial_ms = 1600.0f - (float)(cfg.velocidad * 16);
+                eg.intervalo_caida_ms   = eg.intervalo_inicial_ms;
 
-    input_actualizar();
+                input_actualizar();
 
-    en_juego = 1;
-}
+                en_juego = 1;
+            }
             else if (resultado == 2)
             {
                 corriendo = 0;

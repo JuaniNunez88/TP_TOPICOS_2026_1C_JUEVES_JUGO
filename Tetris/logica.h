@@ -4,14 +4,16 @@
 #include "piezas.h"
 #include "resolucion.h"
 
-typedef enum {
+typedef enum
+{
     ESTADO_MENU,
     ESTADO_JUGANDO,
     ESTADO_PAUSA,
     ESTADO_GAMEOVER
 } e_estado;
 
-typedef struct {
+typedef struct
+{
     int       pieza_x;
     int       pieza_y;
     int       puntaje;

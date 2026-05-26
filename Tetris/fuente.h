@@ -6,7 +6,8 @@
 #define FUENTE_CHAR_MAX 90
 #define FUENTE_TOTAL    (FUENTE_CHAR_MAX - FUENTE_CHAR_MIN + 1)
 
-typedef struct {
+typedef struct
+{
     int ancho;
     int alto;
     const unsigned char letra[FUENTE_TOTAL][FUENTE_MAX_ALTO];
