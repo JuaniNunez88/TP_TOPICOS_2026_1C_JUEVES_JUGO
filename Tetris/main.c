@@ -1,16 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include "GBT/gbt.h"
-#include "logica.h"
-#include "deteccion_tecla.h"
-#include "dibuja.h"
-#include "resolucion.h"
-#include "fuente.h"
-#include "config.h"
-#include "menu.h"
-#include "persona.h"
-
 /*
     Apellido: Nuñez, Juan Ignacio
     DNI: 44547280
@@ -27,6 +14,18 @@
     Usuario: TomiiHB
     Entrega: Sí
 */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include "GBT/gbt.h"
+#include "logica.h"
+#include "deteccion_tecla.h"
+#include "dibuja.h"
+#include "resolucion.h"
+#include "fuente.h"
+#include "config.h"
+#include "menu.h"
+#include "persona.h"
 
 static void recrear_ventana(const t_resolucion *res)
 {
